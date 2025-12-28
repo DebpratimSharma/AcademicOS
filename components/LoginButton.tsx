@@ -22,7 +22,7 @@ export default function LoginButton() {
   return (
     <button 
       onClick={signInWithGoogle}
-      className="px-4 py-2 bg-white/10 rounded-lg border text-white"
+      className="px-4 py-2 bg-secondary rounded-lg border border-border text-secondary-foreground hover:bg-secondary/80"
     >
       Sign in with Google
     </button>

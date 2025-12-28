@@ -40,7 +40,7 @@ const Header = () => {
       <div className="flex-col">
         <div className="flex items-center">
           <Image src="/icon.png" width={40} height={40} alt="⚡" />
-          <span className="font-semibold text-muted-custom text-md ml-1 italic">
+          <span className="font-semibold text-muted-foreground text-md ml-1 italic">
             Academicos
           </span>
         </div>
@@ -48,7 +48,7 @@ const Header = () => {
           <span>Hello, </span>
           <span>&nbsp;{userName}</span>
         </div>
-        <p className="text-muted-custom pt-1 ml-1">{formattedDate}</p>
+        <p className="text-muted-foreground pt-1 ml-1">{formattedDate}</p>
       </div>
       {/* Right side of header: icon */}
       <UserNav />

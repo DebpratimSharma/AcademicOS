@@ -32,6 +32,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { WorkingDaysDialog } from "./WorkingDaysDialog";
+import { HolidayDrawer } from "./HolidayDrawer";
 
 export function UserNav() {
   const { theme, setTheme } = useTheme();
@@ -50,33 +51,28 @@ export function UserNav() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="relative h-10 w-10 rounded-full bg-routine-card border border-routine-border"
+            className="relative h-10 w-10 rounded-full bg-card border border-border"
           >
             <User />
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal">
+          <DropdownMenuLabel className="font-normal flex justify-around">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">Account</p>
               <p className="text-xs leading-none text-muted-foreground">
                 Manage your routine
               </p>
             </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-
-          <DropdownMenuGroup>
-            {/* 1. DARK MODE SWITCH */}
-            <div className="flex items-center justify-between px-2 py-1.5">
+            <div className="flex items-center justify-between gap-2  py-1.5">
               <div className="flex items-center gap-2">
                 {theme === "dark" ? (
                   <Moon className="h-4 w-4" />
                 ) : (
                   <Sun className="h-4 w-4" />
                 )}
-                <span className="text-sm">Dark Mode</span>
+                
               </div>
               <Switch
                 checked={theme === "dark"}
@@ -85,37 +81,17 @@ export function UserNav() {
                 }
               />
             </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
 
+          <DropdownMenuGroup>
+            {/* 1. DARK MODE SWITCH */}
+            
             {/* 2. SETTINGS (WEEKDAYS) */}
             {/* Replace the old Settings DropdownMenuItem with this */}
-            <div className="">
-              <WorkingDaysDialog />
-            </div>
-
+            <WorkingDaysDialog />
             {/* 3. HOLIDAYS DRAWER */}
-            <Drawer>
-              <DrawerTrigger asChild>
-                <div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span>Add Holidays</span>
-                </div>
-              </DrawerTrigger>
-              <DrawerContent>
-                <div className="mx-auto w-full max-w-sm">
-                  <DrawerHeader>
-                    <DrawerTitle>Set Holidays</DrawerTitle>
-                  </DrawerHeader>
-                  <div className="p-4 flex justify-center">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border"
-                    />
-                  </div>
-                </div>
-              </DrawerContent>
-            </Drawer>
+            <HolidayDrawer />
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
@@ -123,7 +99,7 @@ export function UserNav() {
           {/* 4. LOGOUT */}
           <DropdownMenuItem
             onClick={handleLogout}
-            className="text-red-500 focus:text-red-500"
+            className="text-destructive focus:text-destructive"
           >
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
