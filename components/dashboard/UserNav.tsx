@@ -4,10 +4,11 @@ import * as React from "react";
 import {
   Moon,
   Sun,
-  Settings,
-  Calendar as CalendarIcon,
-  LogOut,
   User,
+  LogOut,
+  Trash2,
+  AlertTriangle,
+  Loader2
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -21,91 +22,188 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Calendar } from "@/components/ui/calendar";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { WorkingDaysDialog } from "./WorkingDaysDialog";
 import { HolidayDrawer } from "./HolidayDrawer";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export function UserNav() {
   const { theme, setTheme } = useTheme();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
   const router = useRouter();
   const supabase = createClient();
+  
+  // State for the Reset Alert
+  const [showResetAlert, setShowResetAlert] = React.useState(false);
+  const [isResetting, setIsResetting] = React.useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/");
   };
 
+  const handleFreshStart = async () => {
+    setIsResetting(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
+      // 1. Delete all Routines 
+      // (This automatically deletes Attendance due to CASCADE)
+      const { error: routineError } = await supabase
+        .from('routines')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (routineError) throw routineError;
+
+      // 2. Delete all Custom Holidays
+      const { error: holidayError } = await supabase
+        .from('holidays')
+        .delete()
+        .eq('user_id', user.id);
+      
+      if (holidayError) throw holidayError;
+
+      // 3. Reset User Settings to Defaults
+      // We update the existing row back to the original default array
+      const { error: settingsError } = await supabase
+        .from('user_settings')
+        .update({ 
+          working_days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] 
+        })
+        .eq('user_id', user.id);
+
+      if (settingsError) throw settingsError;
+
+      toast.success("Account reset to default settings");
+      setShowResetAlert(false);
+      
+      // Refresh to update the UI and re-run server-side fetches for StatsCards
+      router.refresh(); 
+      
+    } catch (error) {
+      console.error("Reset Error:", error);
+      toast.error("Failed to clear all data");
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   return (
-    <div className="flex items-start gap-4">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="relative h-10 w-10 rounded-full bg-card border border-border"
-          >
-            <User />
-          </Button>
-        </DropdownMenuTrigger>
+    <>
+      <div className="flex items-start gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="relative h-10 w-10 rounded-full bg-card border border-border"
+            >
+              <User />
+            </Button>
+          </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal flex justify-around">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">Account</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                Manage your routine
-              </p>
-            </div>
-            <div className="flex items-center justify-between gap-2  py-1.5">
-              <div className="flex items-center gap-2">
-                {theme === "dark" ? (
-                  <Moon className="h-4 w-4" />
-                ) : (
-                  <Sun className="h-4 w-4" />
-                )}
-                
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal flex justify-around">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">Account</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  Manage your routine
+                </p>
               </div>
-              <Switch
-                checked={theme === "dark"}
-                onCheckedChange={(checked) =>
-                  setTheme(checked ? "dark" : "light")
-                }
-              />
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+              <div className="flex items-center justify-between gap-2 py-1.5">
+                <div className="flex items-center gap-2">
+                  {theme === "dark" ? (
+                    <Moon className="h-4 w-4" />
+                  ) : (
+                    <Sun className="h-4 w-4" />
+                  )}
+                </div>
+                <Switch
+                  checked={theme === "dark"}
+                  onCheckedChange={(checked) =>
+                    setTheme(checked ? "dark" : "light")
+                  }
+                />
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
 
-          <DropdownMenuGroup>
-            {/* 1. DARK MODE SWITCH */}
-            
-            {/* 2. SETTINGS (WEEKDAYS) */}
-            {/* Replace the old Settings DropdownMenuItem with this */}
-            <WorkingDaysDialog />
-            {/* 3. HOLIDAYS DRAWER */}
-            <HolidayDrawer />
-          </DropdownMenuGroup>
+            <DropdownMenuGroup>
+              <WorkingDaysDialog />
+              <HolidayDrawer />
+            </DropdownMenuGroup>
 
-          <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-          {/* 4. LOGOUT */}
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-destructive focus:text-destructive"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+            {/* DANGER ZONE */}
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault(); // Prevent menu from closing immediately
+                setShowResetAlert(true);
+              }}
+              className="text-red-500 focus:text-red-500 focus:bg-red-500/10 cursor-pointer"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              <span>Reset Account</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-muted-foreground focus:text-destructive"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* ALERT DIALOG FOR RESET */}
+      <AlertDialog open={showResetAlert} onOpenChange={setShowResetAlert}>
+        <AlertDialogContent className="bg-background border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Reset all data?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              entire schedule, attendance history, and custom settings.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isResetting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault(); // Stop dialog from closing automatically to show loading state
+                handleFreshStart();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isResetting}
+            >
+              {isResetting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Resetting...
+                </>
+              ) : (
+                "Yes, Delete Everything"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
