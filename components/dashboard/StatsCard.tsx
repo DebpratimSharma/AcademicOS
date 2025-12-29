@@ -17,9 +17,20 @@ export function StatsCards() {
 
   const fetchStats = useCallback(async () => {
     setLoading(true);
+    
+    // 1. Get the current user to ensure we only fetch THEIR data
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    // 2. Filter by user_id even if the View has RLS
     const { data: stats, error } = await supabase
       .from('attendance_stats')
-      .select('*');
+      .select('*')
+      .eq('user_id', user.id);
 
     if (!error && stats) {
       const totalPresent = stats.reduce((acc, curr) => acc + curr.total_present, 0);
@@ -36,13 +47,17 @@ export function StatsCards() {
     setLoading(false);
   }, [supabase]);
 
-  // Fetch once on mount
   useEffect(() => {
     fetchStats();
+
     const handleUpdate = () => fetchStats();
-    window.addEventListener('attendanceUpdated', handleUpdate);
-    // Cleanup listener on unmount
-    return () => window.removeEventListener('attendance-updated', handleUpdate);
+    
+    // Fixed: Ensure the event names match exactly what is dispatched in ClassCard
+    window.addEventListener('attendance-updated', handleUpdate);
+    
+    return () => {
+      window.removeEventListener('attendance-updated', handleUpdate);
+    };
   }, [fetchStats]);
 
   const statsConfig = [
@@ -58,7 +73,7 @@ export function StatsCards() {
         <button 
           onClick={fetchStats}
           disabled={loading}
-          className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest"
+          className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="h-3 w-3 animate-spin" />
@@ -73,7 +88,7 @@ export function StatsCards() {
         {statsConfig.map((stat, index) => (
           <div 
             key={index} 
-            className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between aspect-square transition-all  shadow-sm"
+            className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between aspect-square transition-all shadow-sm"
           >
             <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
               {stat.label}
