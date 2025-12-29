@@ -66,7 +66,7 @@ export function RoutineDisplay({
         onValueChange={setActiveTab}
         className="w-full"
       >
-        <TabsList className="bg-transparent p-1 h-auto mb-6 gap-2">
+        <TabsList className="bg-transparent w-full p-1 flex flex-wrap h-auto mb-6 gap-2">
           {sortedDays.map((day) => {
             const dateStr = getCalculatedDate(day);
             const isHoliday = holidays.includes(dateStr);
