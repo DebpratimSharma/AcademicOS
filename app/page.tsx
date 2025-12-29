@@ -12,9 +12,9 @@ export default async function LandingPage() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen">
-      <h2>Welcome to AcademicOS</h2>
-      <h1>Class Routine Manager</h1>
+    <main className="flex flex-col gap-3 items-center justify-center min-h-screen">
+      <h1 className='text-3xl'>Welcome to AcademicOS</h1>
+      <h2>Class Routine Manager</h2>
       <p>Organize your semester for free.</p>
       <LoginButton />
     </main>
