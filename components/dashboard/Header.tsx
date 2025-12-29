@@ -41,7 +41,7 @@ const Header = () => {
         <div className="flex items-center">
           <Image src="/icon.png" width={40} height={40} alt="⚡" />
           <span className="font-semibold text-muted-foreground text-md ml-1 italic">
-            Academicos
+            AcademicOS
           </span>
         </div>
         <div className="flex text-3xl italic font-bold ml-1">

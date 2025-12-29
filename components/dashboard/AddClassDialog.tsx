@@ -42,8 +42,8 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full font-bold h-10 px-4">
-          <Plus className="mr-2 h-4 w-4" /> Add to {activeDay}
+        <Button className="bg-primary  text-primary-foreground hover:bg-primary/90 rounded-full font-bold h-10 px-4">
+          <Plus className=" h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-background border-border rounded-3xl sm:max-w-[400px]">
