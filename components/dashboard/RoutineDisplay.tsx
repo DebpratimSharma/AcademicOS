@@ -66,7 +66,7 @@ export function RoutineDisplay({
         onValueChange={setActiveTab}
         className="w-full"
       >
-        <TabsList className="bg-transparent p-1 h-auto flex flex-wrap mb-6 gap-1">
+        <TabsList className="bg-transparent p-1 h-auto mb-6 gap-2">
           {sortedDays.map((day) => {
             const dateStr = getCalculatedDate(day);
             const isHoliday = holidays.includes(dateStr);
@@ -75,7 +75,7 @@ export function RoutineDisplay({
               <TabsTrigger
                 key={day}
                 value={day}
-                className="rounded-full px-4 py-2 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                className="rounded-full  py-2 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
                 <div className="flex items-center gap-2 italic">
                   {day.substring(0, 3)}

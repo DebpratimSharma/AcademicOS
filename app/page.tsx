@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import LoginButton from '@/components/LoginButton'
+import Link from 'next/link'
 
 export default async function LandingPage() {
   const supabase = await createClient()

@@ -46,7 +46,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
           <Plus className=" h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-background border-border rounded-3xl sm:max-w-[400px]">
+      <DialogContent className="bg-background border-border rounded-t-3xl sm:rounded-3xl sm:max-w-100   sm:top-[50%] translate-y-0 sm:translate-y-[-50%] max-h-[95vh] overflow-y-auto duration-200">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-foreground">New Class for {activeDay}</DialogTitle>
           <DialogDescription className="text-muted-foreground">Enter schedule details below.</DialogDescription>
