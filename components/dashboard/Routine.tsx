@@ -27,7 +27,7 @@ export default async function DashboardPage() {
   const holidayDates = holidays?.map(h => h.holiday_date) || []
   console.log('Holidays this week:', holidayDates)
   const isHolidayToday = holidayDates.includes(today)
-  const workingDays = settings?.working_days || ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const workingDays = settings?.working_days || ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   
 
   return (
