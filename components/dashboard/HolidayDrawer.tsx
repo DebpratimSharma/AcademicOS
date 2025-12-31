@@ -79,14 +79,14 @@ export function HolidayDrawer() {
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="w-full rounded-lg border border-border p-6"
+              className="w-full "
               // Highlight existing holidays in the calendar
               modifiers={{ holiday: (d) => holidays.includes(format(d, 'yyyy-MM-dd')) }}
               modifiersClassNames={{ holiday: "bg-destructive/20 text-destructive font-bold rounded-md" }}
             />
           
 
-          <div className="flex flex-col gap-3 mt-4">
+          <div className="flex flex-col px-5 gap-3 mt-4">
             {isAlreadyHoliday ? (
               <Button 
                 variant="destructive" 
