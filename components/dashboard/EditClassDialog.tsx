@@ -47,11 +47,14 @@ export function EditClassDialog({ item }: { item: any }) {
           <Pencil className="w-4 h-4" />
         </button>
       </DrawerTrigger>
-      <DrawerContent className="mx-5 border px-5 pb-8">
+      <DrawerContent className="mx-5 border px-5 ">
+        <div className="overflow-y-auto">
+
+        
         <DrawerHeader>
           <DrawerTitle className="text-xl font-bold text-foreground">Edit Class</DrawerTitle>
         </DrawerHeader>
-        <form onSubmit={handleUpdate} className="overflow-y-auto space-y-4 mt-2">
+        <form onSubmit={handleUpdate} className=" space-y-4 mt-2">
           <Input 
             name="subject" 
             defaultValue={item.subject_name} 
@@ -93,6 +96,7 @@ export function EditClassDialog({ item }: { item: any }) {
             <Button variant="ghost" className="w-full bg-secondary text-secondary-foreground py-6 rounded-lg font-bold">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
+        </div>
       </DrawerContent>
     </Drawer>
   )

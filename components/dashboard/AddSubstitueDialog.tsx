@@ -70,7 +70,7 @@ export function AddSubstituteDialog({ dateStr, customTrigger }: { dateStr: strin
           </Button>
         )}
       </DrawerTrigger>
-      <DrawerContent className="px-4 pb-8 mx-5 border">
+      <DrawerContent className="px-4 mx-5 border">
         <div className="mx-auto w-full overflow-y-auto ">
           <DrawerHeader>
             <DrawerTitle>Substitute Class</DrawerTitle>
