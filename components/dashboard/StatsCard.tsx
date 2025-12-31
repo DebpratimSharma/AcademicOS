@@ -53,10 +53,10 @@ export function StatsCards() {
     const handleUpdate = () => fetchStats();
     
     // Fixed: Ensure the event names match exactly what is dispatched in ClassCard
-    window.addEventListener('attendance-updated', handleUpdate);
+    window.addEventListener('attendanceUpdated', handleUpdate);
     
     return () => {
-      window.removeEventListener('attendance-updated', handleUpdate);
+      window.removeEventListener('attendanceUpdated', handleUpdate);
     };
   }, [fetchStats]);
 

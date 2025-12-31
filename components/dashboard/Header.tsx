@@ -39,7 +39,7 @@ const Header = () => {
       {/* Left side of header */}
       <div className="flex-col">
         <div className="flex items-center">
-          <Image src="/icon.png" width={40} height={40} alt="⚡" />
+          <Image className="h-auto w-auto" src="/icon.png" width={40} height={40} alt="logo" />
           <span className="font-semibold text-muted-foreground text-md ml-1 italic">
             AcademicOS
           </span>
