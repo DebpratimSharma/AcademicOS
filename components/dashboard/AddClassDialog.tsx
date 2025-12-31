@@ -57,7 +57,7 @@ export function AddClassDialog({ activeDay, customTrigger }: { activeDay: string
   }
 
   return (
-    <Drawer open={open} fixed={false} shouldScaleBackground={false} onOpenChange={setOpen}>
+    <Drawer open={open}  onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {customTrigger || (
           <Button variant="outline" className="w-full border-dashed rounded-lg h-12">
