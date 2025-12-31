@@ -33,14 +33,23 @@ export function ClassCard({
     const fetchAttendance = async () => {
       const { data } = await supabase
         .from("attendance")
-        .select("status")
+        .select("status, actual_weight")
         .eq("routine_id", item.id)
         .eq("date", dateStr)
-        .single();
-      if (data) setAttendance(data.status);
+        .maybeSingle();
+        
+      if (data) {
+        setAttendance(data.status);
+        if(data.actual_weight!== null)
+          setActualWeight(data.actual_weight);
+        }
+        else {
+          setAttendance(null);
+          setActualWeight(item.weight);
+        }
     };
     fetchAttendance();
-  }, [item.id, dateStr]);
+  }, [item.id, dateStr, item.weight, supabase]);
 
   // 1. Modified Weight Change Handler*
   const handleWeightChange = async (newWeight: number) => {
