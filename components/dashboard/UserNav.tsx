@@ -37,6 +37,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { updateSession } from "@/utils/supabase/middleware";
+import { updateTag } from "next/cache";
 
 export function UserNav() {
   const { theme, setTheme } = useTheme();
@@ -88,7 +90,8 @@ export function UserNav() {
 
       toast.success("Account reset to default settings");
       setShowResetAlert(false);
-      
+      window.dispatchEvent(new Event("attendanceUpdated"));
+
       // Refresh to update the UI and re-run server-side fetches for StatsCards
       router.refresh(); 
       

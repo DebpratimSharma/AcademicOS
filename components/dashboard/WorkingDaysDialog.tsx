@@ -131,7 +131,7 @@ export function WorkingDaysDialog() {
                 key={day}
                 onClick={() => toggleDay(day)}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left",
+                  "flex items-center gap-3 px-4 py-3 rounded-lg border transition-all text-left",
                   isSelected
                     ? "bg-primary border-primary text-primary-foreground"
                     : "bg-transparent border-border text-muted-foreground"
@@ -159,7 +159,7 @@ export function WorkingDaysDialog() {
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-xl font-bold text-base"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-lg font-bold text-base"
           >
             {loading ? (
               <Loader2 className="animate-spin mr-2" />

@@ -68,29 +68,29 @@ export function HolidayDrawer() {
           <CircleChevronRight className="ml-auto my-auto h-4 w-4 text-accent-foreground" />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-background border-border text-foreground">
-        <div className="mx-auto w-full max-w-sm p-6">
+      <DrawerContent className="bg-background border-border mx-5 pb-8 border text-foreground">
+        <div className="mx-auto w-full max-w-sm ">
           <DrawerHeader>
             <DrawerTitle className="text-center text-xl">Manage Holidays</DrawerTitle>
           </DrawerHeader>
           
-          <div className="flex justify-center my-4 bg-card rounded-2xl p-2 border border-border">
+          
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className=""
+              className="w-full rounded-lg border border-border p-6"
               // Highlight existing holidays in the calendar
               modifiers={{ holiday: (d) => holidays.includes(format(d, 'yyyy-MM-dd')) }}
               modifiersClassNames={{ holiday: "bg-destructive/20 text-destructive font-bold rounded-md" }}
             />
-          </div>
+          
 
           <div className="flex flex-col gap-3 mt-4">
             {isAlreadyHoliday ? (
               <Button 
                 variant="destructive" 
-                className="w-full py-6 rounded-xl gap-2"
+                className="w-full py-6 rounded-lg gap-2"
                 onClick={handleDelete}
                 disabled={loading}
               >
@@ -99,7 +99,7 @@ export function HolidayDrawer() {
               </Button>
             ) : (
               <Button 
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-xl gap-2 font-bold"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 rounded-lg gap-2 font-bold"
                 onClick={handleSave}
                 disabled={loading || !date}
               >

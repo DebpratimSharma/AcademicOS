@@ -5,7 +5,7 @@ import { Pencil, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/utils/supabase/client"
 import { toast } from "sonner"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerFooter, DrawerClose } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -41,56 +41,59 @@ export function EditClassDialog({ item }: { item: any }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className="p-3 text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-all active:scale-90">
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <button className="p-3 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all active:scale-90">
           <Pencil className="w-4 h-4" />
         </button>
-      </DialogTrigger>
-      <DialogContent className="bg-background border-border rounded-3xl sm:max-w-[400px]">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-foreground">Edit Class</DialogTitle>
-        </DialogHeader>
+      </DrawerTrigger>
+      <DrawerContent className="mx-5 border px-5 pb-8">
+        <DrawerHeader>
+          <DrawerTitle className="text-xl font-bold text-foreground">Edit Class</DrawerTitle>
+        </DrawerHeader>
         <form onSubmit={handleUpdate} className="space-y-4 mt-2">
           <Input 
             name="subject" 
             defaultValue={item.subject_name} 
             placeholder="Subject Name" 
             required 
-            className="bg-input border-input rounded-xl py-6" 
+            className="bg-input border-input rounded-lg py-6" 
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 items-center justify-itemce">
+            <span>Start time</span>
+            <span>End time</span>
             <Input 
               name="start" 
               type="time" 
               defaultValue={item.start_time.slice(0, 5)} 
               required 
-              className="bg-input border-input rounded-xl" 
+              className="bg-input border-input rounded-lg" 
             />
+            
             <Input 
               name="end" 
               type="time" 
               defaultValue={item.end_time.slice(0, 5)} 
               required 
-              className="bg-input border-input rounded-xl" 
+              className="bg-input border-input rounded-lg" 
             />
           </div>
           <Input 
             name="room" 
             defaultValue={item.room_number} 
             placeholder="Room Number" 
-            className="bg-input border-input rounded-xl py-6" 
+            className="bg-input border-input rounded-lg py-6" 
           />
-          <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground py-6 rounded-2xl font-bold">
+          <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground py-6 rounded-lg font-bold">
             {loading ? <Loader2 className="animate-spin" /> : "Update Class"}
           </Button>
         </form>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline" className="w-full bg-secondary text-secondary-foreground py-6 rounded-2xl font-bold">Cancel</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        <DrawerFooter>
+          <DrawerClose asChild>
+            <Button variant="ghost" className="w-full bg-secondary text-secondary-foreground py-6 rounded-lg font-bold">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   )
 }

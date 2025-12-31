@@ -88,7 +88,7 @@ export function StatsCards() {
         {statsConfig.map((stat, index) => (
           <div 
             key={index} 
-            className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between aspect-square transition-all shadow-sm"
+            className="bg-card border border-border rounded-lg p-4 flex flex-col justify-between aspect-square transition-all shadow-sm"
           >
             <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
               {stat.label}
