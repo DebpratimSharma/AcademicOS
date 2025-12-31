@@ -57,7 +57,7 @@ export function AddClassDialog({ activeDay, customTrigger }: { activeDay: string
   }
 
   return (
-    <Drawer open={open}  onOpenChange={setOpen}>
+    <Drawer  open={open}  onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {customTrigger || (
           <Button variant="outline" className="w-full border-dashed rounded-lg h-12">
@@ -65,8 +65,9 @@ export function AddClassDialog({ activeDay, customTrigger }: { activeDay: string
           </Button>
         )}
       </DrawerTrigger>
-      <DrawerContent className="px-5  mx-5 border">
-        <DrawerHeader>
+      <DrawerContent className="px-5 max-h-[96%] mx-5 border">
+        <div className="flex-1 overflow-y-auto py-4">
+          <DrawerHeader>
           <DrawerTitle className="text-xl font-bold text-foreground">New Class for {activeDay}</DrawerTitle>
           <DrawerDescription className="text-muted-foreground">Enter schedule details below.</DrawerDescription>
         </DrawerHeader>
@@ -108,6 +109,9 @@ export function AddClassDialog({ activeDay, customTrigger }: { activeDay: string
             <Button variant="ghost" className="w-full text-muted-foreground">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
+          
+        </div>
+        
       </DrawerContent>
     </Drawer>
   )
