@@ -65,7 +65,7 @@ export function AddClassDialog({ activeDay, customTrigger }: { activeDay: string
           </Button>
         )}
       </DrawerTrigger>
-      <DrawerContent className="px-5 pb-25 mx-5 border">
+      <DrawerContent className="px-5  mx-5 border">
         <DrawerHeader>
           <DrawerTitle className="text-xl font-bold text-foreground">New Class for {activeDay}</DrawerTitle>
           <DrawerDescription className="text-muted-foreground">Enter schedule details below.</DrawerDescription>
