@@ -51,7 +51,7 @@ export function EditClassDialog({ item }: { item: any }) {
         <DrawerHeader>
           <DrawerTitle className="text-xl font-bold text-foreground">Edit Class</DrawerTitle>
         </DrawerHeader>
-        <form onSubmit={handleUpdate} className="space-y-4 mt-2">
+        <form onSubmit={handleUpdate} className="overflow-y-auto space-y-4 mt-2">
           <Input 
             name="subject" 
             defaultValue={item.subject_name} 
