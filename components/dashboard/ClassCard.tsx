@@ -20,14 +20,19 @@ export function ClassCard({
   dateStr,
   onDelete,
   isExtra = false,
+  isHoliday = false,
 }: {
   item: any;
   dateStr: string;
   onDelete: (id: string) => void;
   isExtra?: boolean;
+  isHoliday?: boolean;
 }) {
   // 1. Initialize from item immediately for Extras
-  const [actualWeight, setActualWeight] = React.useState(item.weight);
+  const [actualWeight, setActualWeight] = React.useState(
+  isExtra ? (item.actual_weight ?? item.weight) : item.weight
+);
+  
   const [loading, setLoading] = React.useState(false);
   const [attendance, setAttendance] = React.useState<string | null>(
     isExtra ? item.status : null
@@ -40,7 +45,7 @@ export function ClassCard({
     // If it's an extra class, just sync internal state with the item prop
     if (isExtra) {
       setAttendance(item.status);
-      setActualWeight(item.weight);
+      setActualWeight(item.actual_weight ?? item.weight);
       return;
     }
 
@@ -62,7 +67,7 @@ export function ClassCard({
     };
     fetchAttendance();
     // Added item.status and item.weight to deps to ensure UI updates when parent state changes
-  }, [item.id, dateStr, item.weight, item.status, supabase, isExtra]);
+  }, [item.id, dateStr, item.weight, item.status, item.actual_weight, supabase, isExtra]);
 
   // ... rest of your handleWeightChange and handleAttendance logic
   // 1. Modified Weight Change Handler*
@@ -116,7 +121,7 @@ export function ClassCard({
         .update({
           status,
           // Keep the original item.weight even if absent so the denominator stays correct
-          actual_weight: status === 'present' ? actualWeight : 0
+          actual_weight: status === "present" ? actualWeight : 0,
         })
         .eq("id", item.id);
       error = err;
@@ -151,7 +156,7 @@ export function ClassCard({
       {/* THE NODE (The Dot on the line) */}
       <div
         className={cn(
-          "absolute -left-10.25 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-background border-2 z-10 transition-colors",
+          "absolute -left-10.25 md:-left-14.25 lg:-left-18.25 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-background border-2 z-10 transition-colors",
           attendance === "present"
             ? "border-green-500 bg-green-500 shadow-2xl shadow-green-900"
             : attendance === "absent"
@@ -171,22 +176,21 @@ export function ClassCard({
         {/* NEW: Substitute Badge */}
         {isExtra && (
           <div className="absolute -top-3 left-4 bg-primary text-[10px] font-black text-primary-foreground px-2 py-0.5 rounded-full uppercase tracking-tighter italic">
-            Substitute Session
+            Extra Session
           </div>
         )}
-        <div className="flex flex-col sm:flex-row justify-between">
+        <div className="flex flex-col justify-between">
           <div className="space-y-1">
             <div className="flex ml-1 items-center gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
               <span>
                 {item.start_time.slice(0, 5)} — {item.end_time.slice(0, 5)}
               </span>
-              {!(item.room_number==="")&&(
+              {!(item.room_number === "") && (
                 <div>
                   <span className="mx-1">|</span>
-              <span>Room {item.room_number}</span>
-
+                  <span>Room {item.room_number}</span>
                 </div>
-                )}
+              )}
             </div>
             <h4 className="text-lg ml-1 font-bold text-foreground italic">
               {item.subject_name}
@@ -197,7 +201,7 @@ export function ClassCard({
               <Button
                 variant="ghost"
                 size="icon"
-                disabled={loading}
+                disabled={loading || isHoliday}
                 onClick={() => handleAttendance("present")}
                 className={cn(
                   "rounded-full ",
@@ -211,7 +215,7 @@ export function ClassCard({
               <Button
                 variant="ghost"
                 size="icon"
-                disabled={loading}
+                disabled={loading || isHoliday}
                 onClick={() => handleAttendance("absent")}
                 className={cn(
                   "rounded-full text-2xl",
@@ -225,7 +229,7 @@ export function ClassCard({
               <Button
                 variant="ghost"
                 size="icon"
-                disabled={loading}
+                disabled={loading || isHoliday}
                 onClick={() => handleAttendance("dismissed")}
                 className={cn(
                   "rounded-full ",
@@ -240,20 +244,46 @@ export function ClassCard({
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground ml-2" />
               )}
               <div className="flex w-full items-center justify-end  gap-1 self-end">
-            <EditClassDialog item={item} />
-            <button
-              onClick={() => onDelete(item.id)}
-              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </div>
-
+                {item.weight > 1 && (
+                <div className="hidden self-center w-full  md:flex items-center justify-between p-2 bg-secondary/30 rounded-lg border border-border/50">
+                  <div className="flex gap-1">
+                    {[...Array(item.weight)].map((_, i) => {
+                      const val = i + 1;
+                      return (
+                        <button
+                          key={val}
+                          disabled={loading}
+                          onClick={() => handleWeightChange(val)} // TRIGGER DB UPDATE
+                          className={cn(
+                            "px-2 py-1 text-xs font-bold rounded-md transition-all",
+                            actualWeight === val
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted text-muted-foreground hover:bg-muted/80",
+                            loading && "opacity-50 cursor-not-allowed"
+                          )}
+                        >
+                          {val}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="text-[10px] font-bold text-muted-foreground uppercase">
+                    Weightage Received
+                  </div>
+                </div>
+              )}
+                <EditClassDialog item={item} />
+                <button
+                  onClick={() => onDelete(item.id)}
+                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
           {item.weight > 1 && (
-            <div className="mt-3 flex items-center justify-between p-2 bg-secondary/30 rounded-lg border border-border/50">
-              
+            <div className="mt-3 flex md:hidden items-center justify-between p-2 bg-secondary/30 rounded-lg border border-border/50">
               <div className="flex gap-1">
                 {[...Array(item.weight)].map((_, i) => {
                   const val = i + 1;
@@ -280,8 +310,6 @@ export function ClassCard({
               </div>
             </div>
           )}
-
-          
         </div>
       </div>
     </div>

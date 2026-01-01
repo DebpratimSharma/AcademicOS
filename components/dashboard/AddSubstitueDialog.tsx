@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 // We need dateStr (e.g., "2025-12-31") so the DB knows WHICH day this extra class belongs to
-export function AddSubstituteDialog({ dateStr, customTrigger }: { dateStr: string; customTrigger?: React.ReactNode }) {
+export function AddSubstituteDialog({ dateStr }: { dateStr: string;}) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
@@ -64,13 +64,14 @@ export function AddSubstituteDialog({ dateStr, customTrigger }: { dateStr: strin
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        {customTrigger || (
-          <Button variant="outline" className="w-full border-dashed rounded-lg h-12">
-            <Zap className="h-4 w-4 mr-2" /> Add Substitute
-          </Button>
-        )}
+        <Button className="rounded-full shadow-lg bg-card text-secondary-foreground hover:bg-secondary/90 gap-2 border border-border">
+                <Zap className="h-4 w-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  Substitute
+                </span>
+              </Button>
       </DrawerTrigger>
-      <DrawerContent className="px-4 mx-5 border">
+      <DrawerContent className="px-4 md:px-20 md:mx-50 mx-5 border">
         <div className="mx-auto w-full overflow-y-auto ">
           <DrawerHeader>
             <DrawerTitle>Substitute Class</DrawerTitle>

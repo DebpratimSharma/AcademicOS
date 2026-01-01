@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { RefreshCw, Loader2 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 export function StatsCards() {
   const [loading, setLoading] = useState(false);
@@ -68,7 +69,7 @@ export function StatsCards() {
   ];
 
   return (
-    <div className="space-y-2 max-w-2xl mx-auto">
+    <div className="space-y-2 md:space-y-5 mx-auto mb-0">
       <div className="flex justify-end">
         <button 
           onClick={fetchStats}
@@ -84,13 +85,13 @@ export function StatsCards() {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 w-full">
+      <div className="grid grid-cols-4 gap-3 md:gap-7 w-full">
         {statsConfig.map((stat, index) => (
           <div 
             key={index} 
-            className="bg-card border border-border rounded-lg p-4 flex flex-col justify-between aspect-square transition-all shadow-sm"
+            className="bg-card border border-border aspect-square md:aspect-auto md:space-y-6 rounded-lg p-4 flex flex-col justify-between  transition-all shadow-sm"
           >
-            <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
+            <span className="text-[10px] md:text-xl font-bold text-muted-foreground tracking-wider uppercase">
               {stat.label}
             </span>
             <span className={cn("text-2xl font-bold tracking-tight", stat.color)}>
@@ -98,6 +99,12 @@ export function StatsCards() {
             </span>
           </div>
         ))}
+      </div>
+      <div className='flex items-center justify-end'>
+        <Button variant="secondary" disabled={true} className='rounded-full bg-card border border-border text-foreground/70'>
+        Go to Hub (Coming soon...)
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+        </Button>
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ const DAYS = [
   "Saturday",
 ];
 
-export function WorkingDaysDialog() {
+export function WorkingDaysDialog({customTrigger}:{customTrigger?: React.ReactNode}) {
   const router = useRouter();
   const [selectedDays, setSelectedDays] = React.useState<string[]>([]);
   const [loading, setLoading] = React.useState(false);
@@ -104,12 +104,12 @@ export function WorkingDaysDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" className="w-full justify-start  py-1.5">
+        {customTrigger || (<Button variant="ghost" className="w-full justify-start  py-1.5">
           <Settings size={18} />
           <span>Working Days</span>
-          <CircleChevronRight className="ml-auto my-auto h-4 w-4 text-accent-foreground" />
+          <CircleChevronRight className="md:hidden ml-auto my-auto h-4 w-4 text-accent-foreground" />
 
-        </Button>
+        </Button>)}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px] bg-background border-border text-foreground p-6 rounded-3xl">

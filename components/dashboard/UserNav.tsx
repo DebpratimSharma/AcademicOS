@@ -8,7 +8,8 @@ import {
   LogOut,
   Trash2,
   AlertTriangle,
-  Loader2
+  Loader2,
+  EllipsisVertical 
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -60,8 +61,24 @@ export function UserNav() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // 1. Delete all Routines 
-      // (This automatically deletes Attendance due to CASCADE)
+      // 1. Delete Extra Sessions (Substitute classes)
+      const { error: extraError } = await supabase
+        .from('extra_sessions')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (extraError) throw extraError;
+
+      // 2. Delete Attendance History explicitly 
+      // (Ensures stats are cleared even if cascade isn't perfect)
+      const { error: attendanceError } = await supabase
+        .from('attendance')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (attendanceError) throw attendanceError;
+
+      // 3. Delete all Routines 
       const { error: routineError } = await supabase
         .from('routines')
         .delete()
@@ -69,7 +86,7 @@ export function UserNav() {
 
       if (routineError) throw routineError;
 
-      // 2. Delete all Custom Holidays
+      // 4. Delete all Custom Holidays
       const { error: holidayError } = await supabase
         .from('holidays')
         .delete()
@@ -77,7 +94,7 @@ export function UserNav() {
       
       if (holidayError) throw holidayError;
 
-      // 3. Reset User Settings to Defaults
+      // 5. Reset User Settings to Defaults
       // We update the existing row back to the original default array
       const { error: settingsError } = await supabase
         .from('user_settings')
@@ -112,14 +129,14 @@ export function UserNav() {
               variant="ghost"
               className="relative h-10 w-10 rounded-full bg-card border border-border"
             >
-              <User />
+              <EllipsisVertical />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal flex justify-around">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Account</p>
+                <p className="text-sm font-medium leading-none">Settings</p>
                 <p className="text-xs leading-none text-muted-foreground">
                   Manage your routine
                 </p>
@@ -142,12 +159,12 @@ export function UserNav() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuGroup>
+            <DropdownMenuGroup className="md:hidden">
               <WorkingDaysDialog />
               <HolidayDrawer />
             </DropdownMenuGroup>
 
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="md:hidden" />
 
             {/* DANGER ZONE */}
             <DropdownMenuItem

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/Footer";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AcademicOS",
+  title: "AcademicOS Your Daily Routine Manager",
   description: "Manage your academic life with ease.",
 };
 
@@ -25,17 +26,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning >
-      <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+    <html lang="en" suppressHydrationWarning>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
+      />
       <body>
-      <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
           {children}
-          <Footer />
+         <Footer/>
         </ThemeProvider>
       </body>
     </html>

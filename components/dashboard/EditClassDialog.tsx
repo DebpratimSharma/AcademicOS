@@ -47,7 +47,7 @@ export function EditClassDialog({ item }: { item: any }) {
           <Pencil className="w-4 h-4" />
         </button>
       </DrawerTrigger>
-      <DrawerContent className="mx-5 border px-5 ">
+      <DrawerContent className="mx-5  border px-4 md:px-20 md:mx-50">
         <div className="overflow-y-auto">
 
         
