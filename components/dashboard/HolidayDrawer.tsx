@@ -14,7 +14,7 @@ export function HolidayDrawer({ customTrigger }: { customTrigger?: React.ReactNo
 
   const router = useRouter();
 
-  const [date, setDate] = React.useState<Date | undefined | null>(null)
+  const [date, setDate] = React.useState<Date>();
 
   const [holidays, setHolidays] = React.useState<string[]>([])
 
