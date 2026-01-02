@@ -36,6 +36,8 @@ const DAYS = [
   "Saturday",
 ];
 
+import ClientOnly from "./ClientOnly";
+
 export function RoutineDisplay({
   initialRoutine,
   workingDays,
@@ -145,6 +147,7 @@ export function RoutineDisplay({
   };
 
   return (
+    <ClientOnly>
     <div className="relative min-h-[60vh] flex flex-col">
       <Tabs
         value={activeTab}
@@ -163,7 +166,7 @@ export function RoutineDisplay({
                 <span className="hidden md:inline-block">{day}</span>
                 <div className="flex gap-1">
                   {getCalculatedDate(day) === format(new Date(), "yyyy-MM-dd") && (
-                  <div className="w-1 h-1 bg-green-500 rounded-full" />
+                  <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
                 )}
                 {/* Updated to use localHolidays state */}
                 {localHolidays.includes(getCalculatedDate(day)) && (
@@ -337,5 +340,6 @@ export function RoutineDisplay({
         />
       )}
     </div>
+    </ClientOnly>
   );
 }

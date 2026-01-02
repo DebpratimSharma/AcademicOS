@@ -13,22 +13,23 @@ import { Button } from "../ui/button";
 
 const Header = () => {
   const [userName, setUserName] = useState<String | null>(null);
+  const [currentDate, setCurrentDate] = useState("");
   const supabase = createClient();
 
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-
   useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+    setCurrentDate(formattedDate);
+
     const fetchUserName = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        // Google stores the name in user_metadata.full_name
         const name = user.user_metadata?.full_name || "user";
         const first_name = name.split(" ")[0];
         setUserName(first_name);
@@ -36,7 +37,7 @@ const Header = () => {
     };
 
     fetchUserName();
-  }, []);
+  }, [supabase]);
 
   return (
     <nav className="flex-col w-full p-5 md:p-10 pb-0 md:pb-0 lg:px-20 ">
@@ -56,7 +57,7 @@ const Header = () => {
       <div className="HeaderSection flex items-center justify-between">
         <div>
           <span className="italic font-bold text-3xl">Hello, {userName}</span>
-          <p className="font-thin">{formattedDate}</p>
+          <p className="font-thin">{currentDate}</p>
         </div>
         <div className="hidden md:flex items-baseline gap-5">
           <HolidayDrawer
