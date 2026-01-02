@@ -49,7 +49,7 @@ const Header = () => {
             height={40}
             className="h-auto w-auto"
           />
-          <span className="italic text-foreground/70 text-xl">Academic OS</span>
+          <span className="italic text-foreground/70 text-lg md:text-xl">Academic OS</span>
         </div>
         <UserNav />
       </div>

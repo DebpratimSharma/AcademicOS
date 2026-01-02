@@ -71,7 +71,7 @@ export function AddSubstituteDialog({ dateStr }: { dateStr: string;}) {
                 </span>
               </Button>
       </DrawerTrigger>
-      <DrawerContent className="px-4 md:px-20 md:mx-50 mx-5 border">
+      <DrawerContent className="px-5 border border-border mx-auto w-[90%] md:w-[70%] md:px-10 lg:w-[60%] lg:px-15 xl:w-[50%]">
         <div className="mx-auto w-full overflow-y-auto ">
           <DrawerHeader>
             <DrawerTitle>Substitute Class</DrawerTitle>

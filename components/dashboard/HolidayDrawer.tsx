@@ -90,7 +90,7 @@ export function HolidayDrawer({ customTrigger }: { customTrigger?: React.ReactNo
       <DrawerTrigger asChild>
         {customTrigger || (
           <Button variant="ghost" className="w-full justify-start py-1.5">
-            <CalendarIcon className="h-4 w-4 mr-2" />
+            <CalendarIcon size={18} />
             <span>Add Holidays</span>
             <CircleChevronRight className="md:hidden ml-auto h-4 w-4 text-accent-foreground" />
           </Button>

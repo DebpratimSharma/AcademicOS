@@ -76,7 +76,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
           </span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="px-5 md:mx-50 md:px-20  max-h-[96%] mx-5 border">
+      <DrawerContent className="px-5 border border-border mx-auto w-[90%] md:w-[70%] md:px-10 lg:w-[60%] lg:px-15 xl:w-[50%]">
         <div className="flex-1 overflow-y-auto py-4">
           <DrawerHeader>
             <DrawerTitle className="text-xl font-bold text-foreground">
@@ -92,7 +92,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
               name="subject"
               placeholder="Subject Name"
               required
-              className="bg-input border-input rounded-lg py-6"
+              className=" border-input rounded-lg py-6"
             />
 
             <div className="space-y-2">
@@ -106,7 +106,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                 max="5"
                 defaultValue="1"
                 required
-                className="bg-input border-input rounded-lg py-6"
+                className=" border-input rounded-lg py-6"
               />
             </div>
 
@@ -118,21 +118,21 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                 type="time"
                 placeholder="Start time"
                 required
-                className="bg-input border-input rounded-lg"
+                className=" border-input rounded-lg"
               />
               <Input
                 name="end"
                 type="time"
                 placeholder="End time"
                 required
-                className="bg-input border-input rounded-lg"
+                className=" border-input rounded-lg"
               />
             </div>
 
             <Input
               name="room"
               placeholder="Room Number"
-              className="bg-input border-input rounded-lg py-6"
+              className=" border-input rounded-lg py-6"
             />
 
             <Button

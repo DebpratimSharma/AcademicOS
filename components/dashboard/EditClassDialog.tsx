@@ -14,26 +14,46 @@ export function EditClassDialog({ item }: { item: any }) {
   const [loading, setLoading] = React.useState(false)
   const router = useRouter()
   const supabase = createClient()
+  const isSubstitute = item.hasOwnProperty('date')
 
   async function handleUpdate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
     const formData = new FormData(e.currentTarget)
 
-    const { error } = await supabase
-      .from('routines')
-      .update({
-        subject_name: formData.get('subject'),
-        start_time: formData.get('start'),
-        end_time: formData.get('end'),
-        room_number: formData.get('room'),
-      })
-      .eq('id', item.id)
+    let error;
+
+    if (isSubstitute) {
+      const result = await supabase
+        .from('extra_sessions')
+        .update({
+          subject_name: formData.get('subject'),
+          start_time: formData.get('start'),
+          end_time: formData.get('end'),
+          weight: parseInt(formData.get('weight') as string),
+          actual_weight: parseInt(formData.get('weight') as string),
+        })
+        .eq('id', item.id)
+      error = result.error
+    } else {
+      const result = await supabase
+        .from('routines')
+        .update({
+          subject_name: formData.get('subject'),
+          start_time: formData.get('start'),
+          end_time: formData.get('end'),
+          room_number: formData.get('room'),
+          weight: parseInt(formData.get('weight') as string),
+        })
+        .eq('id', item.id)
+      error = result.error
+    }
 
     if (!error) {
-      toast.success("Class updated")
+      toast.success(isSubstitute ? "Substitute class updated" : "Class updated")
       setOpen(false)
       router.refresh()
+      window.dispatchEvent(new Event("attendanceUpdated"));
     } else {
       toast.error("Update failed")
     }
@@ -47,55 +67,70 @@ export function EditClassDialog({ item }: { item: any }) {
           <Pencil className="w-4 h-4" />
         </button>
       </DrawerTrigger>
-      <DrawerContent className="mx-5  border px-4 md:px-20 md:mx-50">
+      <DrawerContent className="px-5 border border-border mx-auto w-[90%] md:w-[70%] md:px-10 lg:w-[60%] lg:px-15 xl:w-[50%]">
         <div className="overflow-y-auto">
-
-        
-        <DrawerHeader>
-          <DrawerTitle className="text-xl font-bold text-foreground">Edit Class</DrawerTitle>
-        </DrawerHeader>
-        <form onSubmit={handleUpdate} className=" space-y-4 mt-2">
-          <Input 
-            name="subject" 
-            defaultValue={item.subject_name} 
-            placeholder="Subject Name" 
-            required 
-            className="bg-input border-input rounded-lg py-6" 
-          />
-          <div className="grid grid-cols-2 gap-4 items-center justify-itemce">
-            <span>Start time</span>
-            <span>End time</span>
+          <DrawerHeader>
+            <DrawerTitle className="text-xl font-bold text-foreground">
+              {isSubstitute ? "Edit Substitute Class" : "Edit Class"}
+            </DrawerTitle>
+          </DrawerHeader>
+          <form onSubmit={handleUpdate} className=" space-y-4 mt-2">
             <Input 
-              name="start" 
-              type="time" 
-              defaultValue={item.start_time.slice(0, 5)} 
+              name="subject" 
+              defaultValue={item.subject_name} 
+              placeholder="Subject Name" 
               required 
-              className="bg-input border-input rounded-lg" 
+              className=" border-input rounded-lg py-6" 
             />
-            
-            <Input 
-              name="end" 
-              type="time" 
-              defaultValue={item.end_time.slice(0, 5)} 
-              required 
-              className="bg-input border-input rounded-lg" 
-            />
-          </div>
-          <Input 
-            name="room" 
-            defaultValue={item.room_number} 
-            placeholder="Room Number" 
-            className="bg-input border-input rounded-lg py-6" 
-          />
-          <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground py-6 rounded-lg font-bold">
-            {loading ? <Loader2 className="animate-spin" /> : "Update Class"}
-          </Button>
-        </form>
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="ghost" className="w-full bg-secondary text-secondary-foreground py-6 rounded-lg font-bold">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+            <div className="space-y-2">
+              <span className=" text-[10px] font-bold text-muted-foreground uppercase ml-1">Weightage</span>
+              <Input 
+                name="weight" 
+                type="number" 
+                defaultValue={item.weight || 1} 
+                min="1"
+                max="5"
+                placeholder="Weightage" 
+                required
+                className=" border-input rounded-lg py-6" 
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4 items-center justify-itemce">
+              <span>Start time</span>
+              <span>End time</span>
+              <Input 
+                name="start" 
+                type="time" 
+                defaultValue={item.start_time.slice(0, 5)} 
+                required 
+                className=" border-input rounded-lg" 
+              />
+              
+              <Input 
+                name="end" 
+                type="time" 
+                defaultValue={item.end_time.slice(0, 5)} 
+                required 
+                className=" border-input rounded-lg" 
+              />
+            </div>
+            {!isSubstitute && (
+              <Input 
+                name="room" 
+                defaultValue={item.room_number} 
+                placeholder="Room Number" 
+                className=" border-input rounded-lg py-6" 
+              />
+            )}
+            <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground py-6 rounded-lg font-bold">
+              {loading ? <Loader2 className="animate-spin" /> : (isSubstitute ? "Update Substitute Class" : "Update Class")}
+            </Button>
+          </form>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="ghost" className="w-full text-muted-foreground">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>

@@ -38,13 +38,33 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Menu } from 'lucide-react';
 import { updateSession } from "@/utils/supabase/middleware";
 import { updateTag } from "next/cache";
+import { useEffect, useState } from "react";
 
 export function UserNav() {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const supabase = createClient();
+  const [userID, setUserID] = useState<String | null>(null);
+
+
+  useEffect(() => {
+      const fetchUserID = async () => {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          // Google stores the name in user_metadata.full_name
+          const userID = user.user_metadata?.email || "UserID";
+          
+          setUserID(userID);
+        }
+      };
+  
+      fetchUserID();
+    }, []);
   
   // State for the Reset Alert
   const [showResetAlert, setShowResetAlert] = React.useState(false);
@@ -129,19 +149,20 @@ export function UserNav() {
               variant="ghost"
               className="relative h-10 w-10 rounded-full bg-card border border-border"
             >
-              <EllipsisVertical />
+              <EllipsisVertical className="md:hidden"/>
+              <Menu className="hidden md:flex"/>
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuContent className="" align="end" forceMount>
             <DropdownMenuLabel className="font-normal flex justify-around">
-              <div className="flex flex-col space-y-1">
+              <div className="flex flex-col space-y-1 ">
                 <p className="text-sm font-medium leading-none">Settings</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  Manage your routine
+                <p className="text-xs pr-2 leading-none text-muted-foreground">
+                  Using {userID}
                 </p>
               </div>
-              <div className="flex items-center justify-between gap-2 py-1.5">
+              <div className="flex border-l pl-2 items-center justify-between gap-2 py-1.5">
                 <div className="flex items-center gap-2">
                   {theme === "dark" ? (
                     <Moon className="h-4 w-4" />
@@ -153,6 +174,7 @@ export function UserNav() {
                   checked={theme === "dark"}
                   onCheckedChange={(checked) =>
                     setTheme(checked ? "dark" : "light")
+
                   }
                 />
               </div>
@@ -174,7 +196,7 @@ export function UserNav() {
               }}
               className="text-red-500 focus:text-red-500 focus:bg-red-500/10 cursor-pointer"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
               <span>Reset Account</span>
             </DropdownMenuItem>
 
@@ -182,7 +204,7 @@ export function UserNav() {
               onClick={handleLogout}
               className="text-muted-foreground focus:text-destructive"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
