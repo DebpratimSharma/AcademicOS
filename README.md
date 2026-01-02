@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📅 AcademicOS: Smart Academic Scheduler
 
-## Getting Started
+A high-performance, mobile-first academic routine manager built for students and educators. AcademicOS synchronizes your daily schedule with real-time attendance tracking, automated holiday logic, and substitute session management.
 
-First, run the development server:
+✨ Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🕒 Intelligent Routine Management
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Dynamic Tabs: Automatic day-selection based on current time.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Precision Scheduling: Handles regular weekly classes and one-time substitute sessions seamlessly.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Timezone-Safe Logic: Proprietary date calculation that prevents "date-drift" across different geographic regions.
 
-## Learn More
+🏖️ Smart Holiday System
 
-To learn more about Next.js, take a look at the following resources:
+Per-User Holidays: Personalize your break days with a sleek Calendar Drawer.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Global Reactive State: Mark a day as a holiday, and all attendance buttons instantly lock across the app to prevent accidental tracking.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Visual Indicators: Indicators on tab headers for upcoming holidays.
 
-## Deploy on Vercel
+📊 Attendance Tracking (BETA)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+One-Tap Logs: Mark presence, absence, or dismissed status with haptic-ready feedback.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Persistence: Powered by Supabase RLS (Row Level Security) for iron-clad data privacy.
+
+📱 Modern UI/UX
+
+Design: Minimalist aesthetics with a focus on typography (Bold & Italic accents).
+
+Speed Dial Menu: Quick-action floating buttons for adding classes or substitutes on the fly.
+
+Adaptive Dark Mode: Sophisticated palette that adjusts to your system theme.
+
+🛠️ Tech Stack
+
+Framework: Next.js 14+ (App Router)
+
+Database & Auth: Supabase
+
+Styling: Tailwind CSS
+
+Components: Shadcn/UI
+
+State Management: React Hooks & Custom Event Dispatching
+
+Date Handling: date-fns
+
+🚀 Getting Started
+
+Prerequisites
+
+Node.js 18+
+
+Supabase Account
+
+Installation
+
+Clone the repository
+
+git clone [https://github.com/DebpratimSharma/AcademicOS.git](https://github.com/DebpratimSharma/AcademicOS.git)
+cd academicos
+
+
+Install dependencies
+
+pnpm install
+
+
+Environment Setup
+Create a .env.local file and add your Supabase credentials.
+
+Database Schema
+Run the SQL migrations provided in /supabase/migrations to set up:
+
+routines table
+
+holidays table
+
+extra_sessions table
+
+attendance table
+
+attendance_stats  view
+
+user_settings table
+
+Launch
+
+pnpm run dev
+
+
+🔒 Security & Cookies
+
+AcademicOS utilizes Strictly Necessary Cookies for authentication and session persistence via Supabase. We prioritize user privacy:
+
+No third-party tracking or marketing cookies.
+
+Row-Level Security ensures you only ever see your own data.
+
+🗺️ Working On
+
+[ ] Analytics Hub (Attendance Percentage)
+
+[ ] Push Notifications for upcoming classes
+
+Built with ❤️ for better academic productivity.

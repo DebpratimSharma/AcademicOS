@@ -161,10 +161,17 @@ export function RoutineDisplay({
               <div className="flex items-center gap-2 italic">
                 {<span className="md:hidden">{day.substring(0, 3)}</span>}
                 <span className="hidden md:inline-block">{day}</span>
+                <div className="flex gap-1">
+                  {getCalculatedDate(day) === format(new Date(), "yyyy-MM-dd") && (
+                  <div className="w-1 h-1 bg-green-500 rounded-full" />
+                )}
                 {/* Updated to use localHolidays state */}
                 {localHolidays.includes(getCalculatedDate(day)) && (
-                  <div className="w-1.5 h-1.5 bg-destructive rounded-full animate-pulse" />
+                  <div className="w-1 h-1 bg-destructive rounded-full animate-pulse" />
                 )}
+
+                </div>
+                
               </div>
             </TabsTrigger>
           ))}
@@ -181,10 +188,10 @@ export function RoutineDisplay({
             <TabsContent
               key={day}
               value={day}
-              className="outline-none pb-24 space-y-4 md:space-y-6"
+              className="outline-none space-y-4 md:space-y-6"
             >
               {overrideDate && (
-                <div className="flex items-center justify-center gap-2 mb-4 p-2 bg-muted/50 rounded-lg text-xs md:text-sm font-medium text-muted-foreground uppercase tracking-widest border border-dashed border-border">
+                <div className="flex items-center justify-center gap-2 p-2 bg-muted/50 rounded-lg text-xs md:text-sm font-medium text-muted-foreground uppercase tracking-widest border border-dashed border-border">
                   <History className="h-3 w-3" />
                   Viewing: {format(new Date(dateStr), "MMMM do, yyyy")}
                 </div>
@@ -200,7 +207,7 @@ export function RoutineDisplay({
                 </div>
               )}
 
-              <div className="relative ml-4 md:ml-8 lg:ml-12 border-l-2 border-border pl-8 md:pl-12 lg:pl-16 pb-4 space-y-6 md:space-y-8">
+              <div className="relative ml-4 md:ml-8 lg:ml-12 border-l-2 border-border pl-8 md:pl-12 lg:pl-16 space-y-6 md:space-y-8">
                 {/* 1. RENDER REGULAR CLASSES */}
                 {classesForThisDay.map((item) => (
                   <ClassCard
@@ -256,7 +263,7 @@ export function RoutineDisplay({
                 variant="ghost"
                 className="w-full mx-auto h-12 rounded-lg border border-dashed border-border text-muted-foreground"
               >
-                <History className="h-4 w-4 mr-2" /> Jump to date
+                <History className="h-4 w-4 mr-2" />Forgot to mark? Jump to date
               </Button>
             </DrawerTrigger>
             <DrawerContent className="mx-5 pb-20 md:mx-20 lg:mx-50 border p-5 pt-0">
