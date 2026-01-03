@@ -1,23 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Zap, Loader2, Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   Drawer,
   DrawerClose,
@@ -35,16 +24,24 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
   const router = useRouter();
   const supabase = createClient();
 
+  // Helper to get local date string YYYY-MM-DD without ISO/Hydration issues
+  const getLocalDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+    
     const formData = new FormData(e.currentTarget);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    // Capture the weight from the form (convert string to number)
     const weightValue = parseInt(formData.get("weight") as string) || 1;
+    const today = getLocalDateString();
 
     const { error } = await supabase.from("routines").insert({
       user_id: user?.id,
@@ -53,7 +50,12 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
       start_time: formData.get("start"),
       end_time: formData.get("end"),
       room_number: formData.get("room"),
-      weight: weightValue, // Save the weight here
+      weight: weightValue,
+      // --- New Temporal Fields ---
+      status: 'active',
+      start_date: today, // Initializes the routine from today onwards
+      end_date: null,    // Remains active indefinitely
+      subject_code: formData.get("subject_code")
     });
 
     if (!error) {
@@ -61,6 +63,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
       setOpen(false);
       router.refresh();
     } else {
+      console.error(error);
       toast.error("Failed to add class");
     }
     setLoading(false);
@@ -69,7 +72,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="rounded-full p-7  shadow-lg bg-secondary text-foreground hover:bg-muted gap-2 border border-border">
+        <Button className="p-7 rounded-full shadow-lg bg-card text-secondary-foreground hover:bg-secondary/90 gap-2 border border-border">
           <Plus className="h-4 w-4" />
           <span className="text-md mr-4 font-bold uppercase tracking-wider">
             Regular Class
@@ -83,7 +86,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
               New Class for {activeDay}
             </DrawerTitle>
             <DrawerDescription className="text-muted-foreground">
-              Enter schedule details below.
+              Enter schedule details. This class will start appearing in the routine from today.
             </DrawerDescription>
           </DrawerHeader>
 
@@ -92,47 +95,54 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
               name="subject"
               placeholder="Subject Name"
               required
-              className=" border-input rounded-lg py-6"
+              className="border-input rounded-lg py-6"
             />
-
+            <Input
+              name="subject_code"
+              placeholder="Subject Code"
+              required
+              className="border-input rounded-lg py-6"
+            />
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
                 Class Weightage (Credits)
               </label>
               <Input
-                name="weight" // Changed from register to name
+                name="weight"
                 type="number"
                 min="1"
                 max="5"
                 defaultValue="1"
                 required
-                className=" border-input rounded-lg py-6"
+                className="border-input rounded-lg py-6"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <span>Start time</span>
-              <span>End time</span>
-              <Input
-                name="start"
-                type="time"
-                placeholder="Start time"
-                required
-                className=" border-input rounded-lg"
-              />
-              <Input
-                name="end"
-                type="time"
-                placeholder="End time"
-                required
-                className=" border-input rounded-lg"
-              />
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase ml-1">Start Time</span>
+                <Input
+                  name="start"
+                  type="time"
+                  required
+                  className="border-input rounded-lg"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase ml-1">End Time</span>
+                <Input
+                  name="end"
+                  type="time"
+                  required
+                  className="border-input rounded-lg"
+                />
+              </div>
             </div>
 
             <Input
               name="room"
               placeholder="Room Number"
-              className=" border-input rounded-lg py-6"
+              className="border-input rounded-lg py-6"
             />
 
             <Button
