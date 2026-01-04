@@ -1,7 +1,16 @@
 'use client'
 import { createClient } from '@/utils/supabase/client'
+import { ArrowRight } from 'lucide-react'
 
-export default function LoginButton() {
+interface LoginButtonProps{
+  children?: React.ReactNode;
+}
+
+export default function LoginButton({
+  children,
+}:
+  LoginButtonProps
+) {
   const supabase = createClient()
 
   const signInWithGoogle = async () => {
@@ -19,12 +28,20 @@ export default function LoginButton() {
   })
 }
 
+  if(children)
+    return(
+        <div onClick={signInWithGoogle} className="cursor-pointer">{children}</div>
+  )
+
   return (
-    <button 
+    <button
       onClick={signInWithGoogle}
-      className="px-4 py-2 bg-secondary rounded-lg border border-border text-secondary-foreground hover:bg-secondary/80"
-    >
-      Sign in with Google
+      className="bg-foreground  flex items-center gap-2 text-background hover:bg-background hover:text-foreground text-sm font-medium transition-all bg-wh px-3 py-1.5 rounded-full hover:border border-white/50">
+    
+      <span className='flex items-center gap-2'>
+        Sign in <ArrowRight className="w-4 h-4" />
+      </span>
+      
     </button>
   )
 }
