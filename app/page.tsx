@@ -177,7 +177,7 @@ export default async function LandingPage() {
       <Navbar />
       <div id="hero" className="flex bg-grid flex-col gap-3 items-center justify-center w-full min-h-screen">
         <FadeIN delay={100}>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-6 text-center">
+          <h1 className="text-5xl md:text-7xl mt-16 md:mt-26 font-bold tracking-tight text-foreground mb-6 text-center">
             Welcome to <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40">
               Academic OS
@@ -193,7 +193,7 @@ export default async function LandingPage() {
           </p>
         </FadeIN>
         <LoginButton>
-          <button className="py-7 px-8 rounded-full bg-foreground text-background font-semibold cursor-pointer transition-colors flex items-center gap-2">
+          <button className="py-5 px-8 rounded-full bg-foreground border border-foreground text-background font-semibold cursor-pointer hover:bg-background hover:text-foreground transition-colors duration-300 flex items-center gap-2">
             Start for free <ArrowRight size={16} />
           </button>
         </LoginButton>
@@ -206,11 +206,13 @@ export default async function LandingPage() {
           </span>
 
           {/* The Animated Line */}
-          <div className="w-[1px] h-16 bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1/2 bg-foreground animate-scroll-line"></div>
+          <div className="w-px rounded-full h-16 bg-linear-to-b from-foreground/20 via-foreground/10 to-transparent relative overflow-hidden">
+            <div className=" w-full h-1/2 bg-foreground animate-scroll-line"></div>
           </div>
         </a>
       </div>
+
+      {/* Mockup section*/}
       <div className="w-full px-5 md:px-30 pb-10 scroll-mt-24" id="explore" >
         <FadeIN delay={300}>
           <HeroMockup  />
@@ -278,7 +280,7 @@ export default async function LandingPage() {
             </p>
             <div className="w-full flex justify-center">
               <LoginButton>
-                <button className="py-7 px-8 rounded-full bg-foreground text-background font-semibold cursor-pointer transition-colors flex items-center gap-2">
+                <button className="py-7 px-8 rounded-full border border-foreground bg-foreground hover:bg-background hover:text-foreground text-background font-semibold cursor-pointer transition-colors duration-300 flex items-center gap-2">
                   Start for free <ArrowRight size={16} />
                 </button>
               </LoginButton>
