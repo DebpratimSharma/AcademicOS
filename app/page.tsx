@@ -27,7 +27,7 @@ const FeatureCard = ({
   colSpan?: string;
 }) => (
   <div
-    className={`bg-gradient-to-b from-[#111] to-[#0A0A0A] border border-border rounded-2xl p-8 hover:border-foreground/25 transition-all h-full group ${colSpan}`}
+    className={`bg-linear-to-b from-background to-card border border-border rounded-2xl p-8 hover:border-foreground/25 transition-all h-full group ${colSpan}`}
   >
     <div className="w-10 h-10 bg-card rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-foreground/5">
       <Icon className="text-foreground w-5 h-5" />
@@ -142,7 +142,7 @@ const HeroMockup = () => (
                       ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-500"
                       : item.status === "absent"
                       ? "bg-rose-500/10 border-rose-500/50 text-rose-500"
-                      : "bg-zinc-800 border-border text-foreground/50"
+                      : "bg-foreground/40 border-border text-foreground/50"
                   }`}
                 >
                   {item.status === "present" && <CheckCircle2 size={14} />}
@@ -186,7 +186,7 @@ export default async function LandingPage() {
         </FadeIN>
 
         <FadeIN delay={200}>
-          <p className="px-5 md:px-0 text-center text-lg md:text-xl text-foreground/30 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="px-5 md:px-0 text-center text-lg md:text-xl text-foreground/55 max-w-2xl mx-auto mb-10 leading-relaxed">
             The smart and modern routine management system designed for
             students. Track attendance, manage holidays, and sync your schedule
             across all devices in real-time.

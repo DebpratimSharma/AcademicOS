@@ -36,7 +36,7 @@ export default function LoginButton({
   return (
     <button
       onClick={signInWithGoogle}
-      className="bg-foreground  flex items-center gap-2 text-background hover:bg-background hover:text-foreground text-sm font-medium transition-all bg-wh px-3 py-1.5 rounded-full hover:border border-white/50">
+      className="bg-foreground flex items-center gap-2 text-background hover:bg-background hover:text-foreground text-sm font-medium transition-all bg-wh px-3 py-1.5 rounded-full border-foreground border  ">
     
       <span className='flex items-center gap-2'>
         Sign in <ArrowRight className="w-4 h-4" />

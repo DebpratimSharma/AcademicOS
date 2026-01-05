@@ -7,6 +7,7 @@ import {
   X,
   CheckCircle2,
 } from "lucide-react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogClose,
@@ -22,10 +23,10 @@ const InstallModals = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="flex items-center gap-2 text-foreground/70 hover:border-foreground text-sm bg-wh px-3 py-1.5 rounded-md border border-white/50">
+        <Button className="flex items-center gap-2 text-foreground/70 hover:text-background border-foreground text-sm bg-wh px-3 py-1.5 rounded-md border ">
           <Download size={14} />
           <span className="hidden md:flex">Install App</span>
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
