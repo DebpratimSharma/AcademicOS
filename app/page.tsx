@@ -79,7 +79,7 @@ const HeroMockup = () => (
           ].map((stat, i) => (
             <div
               key={i}
-              className="bg-card/50 border border-border p-4 rounded-lg"
+              className="bg-card/50 border aspect-square md:aspect-auto border-border p-1.5 md:p-4 rounded-lg"
             >
               <div className="text-[10px] uppercase tracking-wider text-foreground/20 font-semibold">
                 {stat.label}
