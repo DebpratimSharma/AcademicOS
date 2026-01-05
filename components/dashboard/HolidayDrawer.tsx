@@ -162,6 +162,7 @@ export function HolidayDrawer({
 
           
             <Calendar
+              
               mode="single"
               selected={date}
               onSelect={setDate}
@@ -183,6 +184,7 @@ export function HolidayDrawer({
                 className="w-full py-6 rounded-xl gap-2 font-bold shadow-lg shadow-destructive/20"
                 onClick={handleDelete}
                 disabled={loading}
+                autoFocus
               >
                 {loading ? (
                   <Loader2 className="animate-spin" />

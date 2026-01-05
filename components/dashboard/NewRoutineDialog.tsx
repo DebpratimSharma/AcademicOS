@@ -107,6 +107,7 @@ export function NewRoutineDialog({ activeDay }: { activeDay: string }) {
               disabled={loading}
               variant="destructive"
               className="w-full py-6 rounded-lg font-bold"
+              autoFocus
             >
               {loading ? (
                 <Loader2 className="animate-spin text-white" />

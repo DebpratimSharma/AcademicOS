@@ -86,6 +86,7 @@ export function AddSubstituteDialog({ dateStr }: { dateStr: string;}) {
               placeholder="Subject Name"
               required
               className="py-6 rounded-lg"
+              autoFocus
             />
 
             <div className="space-y-2">

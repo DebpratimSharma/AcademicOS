@@ -90,18 +90,19 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
             </DrawerDescription>
           </DrawerHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          <form onSubmit={handleSubmit} className="space-y-4 px-4">
             <Input
               name="subject"
               placeholder="Subject Name"
               required
-              className="border-input rounded-lg py-6"
+              className=" rounded-lg py-6"
+              autoFocus
             />
             <Input
               name="subject_code"
               placeholder="Subject Code"
               required
-              className="border-input rounded-lg py-6"
+              className=" rounded-lg py-6"
             />
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
@@ -114,7 +115,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                 max="5"
                 defaultValue="1"
                 required
-                className="border-input rounded-lg py-6"
+                className=" rounded-lg py-6"
               />
             </div>
 
@@ -125,7 +126,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                   name="start"
                   type="time"
                   required
-                  className="border-input rounded-lg"
+                  className=" rounded-lg"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -134,7 +135,7 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                   name="end"
                   type="time"
                   required
-                  className="border-input rounded-lg"
+                  className=" rounded-lg"
                 />
               </div>
             </div>

@@ -119,7 +119,7 @@ export function WorkingDaysDialog({customTrigger}:{customTrigger?: React.ReactNo
           </DialogTitle>
         </DialogHeader>
 
-        <p className="text-muted-foreground text-sm mb-6 text-center">
+        <p className="text-muted-foreground text-sm mb-6 text-center" autoFocus>
           Select the days you have classes.
         </p>
 
