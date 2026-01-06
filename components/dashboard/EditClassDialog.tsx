@@ -110,7 +110,7 @@ export function EditClassDialog({ item }: { item: any }) {
             </DrawerHeader>
             
             <form ref={formRef} onSubmit={handleSubmitAttempt} className="space-y-4 mt-2 p-1">
-              <div className="space-y-1">
+              <div className="space-y-3">
                 <span className="text-[10px] font-bold text-muted-foreground uppercase ml-1">Subject Info</span>
                 <Input name="subject" defaultValue={item.subject_name} placeholder="Subject Name" required className="py-6" autoFocus />
                 {!isSubstitute && <Input name="subject_code" defaultValue={item.subject_code} placeholder="Subject Code" className="py-6" />}

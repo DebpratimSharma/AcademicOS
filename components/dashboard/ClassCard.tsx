@@ -199,6 +199,9 @@ export function ClassCard({
             <h4 className="text-lg ml-1 font-bold text-foreground italic">
               {item.subject_name}
             </h4>
+            <h5 className="text-sm ml-1 font-thin text-foreground/70">
+              {item.subject_code}
+            </h5>
 
             <div className="flex items-center gap-1 mt-3">
               <Button
