@@ -26,9 +26,10 @@ import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
 import { resetAccount } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
-import { WorkingDaysDialog } from "./WorkingDaysDialog";
-import { HolidayDrawer } from "./HolidayDrawer";
-import { ManualOverrideDialog } from "./ManualOverrideDialog";
+import dynamic from "next/dynamic";
+const WorkingDaysDialog = dynamic(() => import("./WorkingDaysDialog").then(mod => mod.WorkingDaysDialog), { ssr: false });
+const HolidayDrawer = dynamic(() => import("./HolidayDrawer").then(mod => mod.HolidayDrawer), { ssr: false });
+const ManualOverrideDialog = dynamic(() => import("./ManualOverrideDialog").then(mod => mod.ManualOverrideDialog), { ssr: false });
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -41,7 +42,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Menu } from 'lucide-react';
-import { updateSession } from "@/utils/supabase/middleware";
+import { updateSession } from "@/utils/supabase/proxy";
 import { updateTag } from "next/cache";
 import { useEffect, useState } from "react";
 

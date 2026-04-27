@@ -175,13 +175,11 @@ export default async function LandingPage() {
   return (
     <main className=" flex flex-col  items-center ">
       <Navbar />
-      <div id="hero" className="flex bg-grid flex-col gap-3 items-center justify-center w-full min-h-screen">
+      <div id="hero" className="flex bg-grid flex-col gap-3 items-center justify-center w-full min-h-screen mt-10">
         <FadeIN delay={100}>
-          <h1 className="text-5xl md:text-7xl mt-16 md:mt-26 font-bold tracking-tight text-foreground mb-6 text-center">
-            Welcome to <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40">
-              Academic OS
-            </span>
+          <h1 className="text-4xl md:text-6xl lg:text-9xl font-black tracking-tighter text-foreground font-normal mb-6 text-center">
+            Your Day <br />
+            Perfectly <span className="text-primary font-bold ">Schedura</span>'d.
           </h1>
         </FadeIN>
 
@@ -194,7 +192,7 @@ export default async function LandingPage() {
         </FadeIN>
         <LoginButton>
           <button className="py-5 px-8 rounded-full bg-foreground border border-foreground text-background font-semibold cursor-pointer hover:bg-background hover:text-foreground transition-colors duration-300 flex items-center gap-2">
-            Start for free <ArrowRight size={16} />
+            Sign in <ArrowRight size={16} />
           </button>
         </LoginButton>
         <a
@@ -281,7 +279,7 @@ export default async function LandingPage() {
             <div className="w-full flex justify-center">
               <LoginButton>
                 <button className="py-7 px-8 rounded-full border border-foreground bg-foreground hover:bg-background hover:text-foreground text-background font-semibold cursor-pointer transition-colors duration-300 flex items-center gap-2">
-                  Start for free <ArrowRight size={16} />
+                  Sign in <ArrowRight size={16} />
                 </button>
               </LoginButton>
             </div>

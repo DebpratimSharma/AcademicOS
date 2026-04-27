@@ -312,3 +312,21 @@ export async function addManualBaseline(conducted: number, present: number) {
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard");
 }
+export async function getSubjectDetails(subjectCode: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const { data, error } = await supabase
+    .from("routines")
+    .select("subject_name, weight, room_number")
+    .eq("user_id", user.id)
+    .eq("subject_code", subjectCode)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) return null;
+  return data;
+}

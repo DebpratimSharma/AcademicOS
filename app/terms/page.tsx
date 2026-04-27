@@ -5,7 +5,7 @@ export default function TermsOfService() {
       
       <section className="mt-8 space-y-4">
         <h2 className="text-xl font-semibold">1. Acceptance of Terms</h2>
-        <p>By using AcademicOS, you agree to store your academic schedule on our platform. This tool is provided "as is" for student productivity.</p>
+        <p>By using Schedura, you agree to store your academic schedule on our platform. This tool is provided "as is" for student productivity.</p>
         
         <h2 className="text-xl font-semibold">2. User Conduct</h2>
         <p>Users are responsible for the data they input into their routines. Any misuse of the platform may result in account suspension.</p>

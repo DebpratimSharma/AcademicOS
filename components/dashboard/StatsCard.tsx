@@ -1,78 +1,63 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { RefreshCw, Loader2 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function StatsCards() {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({
-    percentage: 0,
-    present: 0,
-    conducted: 0,
-    absent: 0
-  });
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
-  const fetchStats = useCallback(async () => {
-    setLoading(true);
-    
-    // 1. Get the current user to ensure we only fetch THEIR data
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+  const { data, isFetching: loading, refetch: fetchStats } = useQuery({
+    queryKey: ['attendanceStats'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { percentage: 0, present: 0, conducted: 0, absent: 0 };
 
-    // 2. Filter by user_id even if the View has RLS
-    const { data: stats, error } = await supabase
-      .from('attendance_stats')
-      .select('*')
-      .eq('user_id', user.id);
+      const { data: stats, error } = await supabase
+        .from('attendance_stats')
+        .select('*')
+        .eq('user_id', user.id);
 
-    if (!error && stats) {
+      if (error || !stats) return { percentage: 0, present: 0, conducted: 0, absent: 0 };
+
       const totalPresent = stats.reduce((acc, curr) => acc + curr.total_present, 0);
       const totalConducted = stats.reduce((acc, curr) => acc + curr.total_conducted, 0);
       const percentage = totalConducted > 0 ? Math.round((totalPresent / totalConducted) * 100) : 0;
       
-      setData({
+      return {
         percentage,
         present: totalPresent,
         conducted: totalConducted,
         absent: totalConducted - totalPresent
-      });
-    }
-    setLoading(false);
-  }, [supabase]);
+      };
+    },
+    staleTime: 60 * 1000, // 1 minute
+  });
+
+  const displayData = data || { percentage: 0, present: 0, conducted: 0, absent: 0 };
 
   useEffect(() => {
-    fetchStats();
-
-    const handleUpdate = () => fetchStats();
-    
-    // Fixed: Ensure the event names match exactly what is dispatched in ClassCard
+    const handleUpdate = () => queryClient.invalidateQueries({ queryKey: ['attendanceStats'] });
     window.addEventListener('attendanceUpdated', handleUpdate);
-    
-    return () => {
-      window.removeEventListener('attendanceUpdated', handleUpdate);
-    };
-  }, [fetchStats]);
+    return () => window.removeEventListener('attendanceUpdated', handleUpdate);
+  }, [queryClient]);
 
   const statsConfig = [
-    { label: "TOTAL", value: data.conducted, color: "text-foreground" },
-    { label: "ATTEND", value: `${data.percentage}%`, color: "text-foreground" },
-    { label: "PRESENT", value: data.present, color: "text-green-400" },
-    { label: "ABSENT", value: data.absent, color: "text-red-400" },
+    { label: "TOTAL", value: displayData.conducted, color: "text-foreground" },
+    { label: "ATTEND", value: `${displayData.percentage}%`, color: "text-foreground" },
+    { label: "PRESENT", value: displayData.present, color: "text-green-400" },
+    { label: "ABSENT", value: displayData.absent, color: "text-red-400" },
   ];
 
   return (
     <div className="space-y-2 md:space-y-5 mx-auto mb-0">
       <div className="flex justify-end">
         <button 
-          onClick={fetchStats}
+          onClick={() => fetchStats()}
           disabled={loading}
           className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest disabled:opacity-50"
         >

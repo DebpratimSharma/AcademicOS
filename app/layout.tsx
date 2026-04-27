@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/Footer";
-
+import QueryProvider from "@/components/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,8 +16,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AcademicOS Your Daily Routine Manager",
-  description: "Manage your academic life with ease.",
+  title: "Schedura",
+  description: "Your Intelligent Academic Routine Manager",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Schedura",
+  },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -38,8 +46,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-         <Footer/>
+          <QueryProvider>
+            {children}
+            <Footer/>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

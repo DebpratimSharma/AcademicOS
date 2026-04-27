@@ -3,10 +3,11 @@
 import * as React from "react";
 import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { addRegularClass } from "@/app/dashboard/actions";
+import { addRegularClass, getSubjectDetails } from "@/app/dashboard/actions";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Drawer,
   DrawerClose,
@@ -22,6 +23,35 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
+
+  // Form States for Auto-fill
+  const [subjectName, setSubjectName] = React.useState("");
+  const [subjectCode, setSubjectCode] = React.useState("");
+  const [weight, setWeight] = React.useState("1");
+  const [startTime, setStartTime] = React.useState("");
+  const [endTime, setEndTime] = React.useState("");
+  const [room, setRoom] = React.useState("");
+
+  // useQuery for auto-fill details
+  const { data: details, isFetching: fetchingDetails } = useQuery({
+    queryKey: ["subjectDetails", subjectCode],
+    queryFn: () => getSubjectDetails(subjectCode),
+    enabled: !!subjectCode && subjectCode.length >= 2,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+  // Populate form when details are found
+  React.useEffect(() => {
+    if (details) {
+      setSubjectName(details.subject_name || "");
+      setWeight(String(details.weight || "1"));
+      setRoom(details.room_number || "");
+      toast.info("Auto-filled details from previous record", {
+        description: `Found match for ${subjectCode}`,
+        duration: 3000,
+      });
+    }
+  }, [details, subjectCode]);
 
   // Helper to get local date string YYYY-MM-DD without ISO/Hydration issues
   const getLocalDateString = () => {
@@ -41,6 +71,15 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
       const today = getLocalDateString();
       await addRegularClass(formData, activeDay, today);
       toast.success(`Added to ${activeDay}`);
+      
+      // Reset form
+      setSubjectName("");
+      setSubjectCode("");
+      setWeight("1");
+      setStartTime("");
+      setEndTime("");
+      setRoom("");
+      
       setOpen(false);
     } catch (error) {
       console.error(error);
@@ -72,19 +111,42 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
           </DrawerHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 px-4">
-            <Input
-              name="subject"
-              placeholder="Subject Name"
-              required
-              className=" rounded-lg py-6"
-              autoFocus
-            />
-            <Input
-              name="subject_code"
-              placeholder="Subject Code"
-              required
-              className=" rounded-lg py-6"
-            />
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
+                Subject Code
+              </label>
+              <div className="relative">
+                <Input
+                  name="subject_code"
+                  placeholder="e.g. CS101"
+                  required
+                  value={subjectCode}
+                  onChange={(e) => setSubjectCode(e.target.value.toUpperCase())}
+                  className="rounded-lg py-6 pr-10"
+                  autoFocus
+                />
+                {fetchingDetails && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
+                Subject Name
+              </label>
+              <Input
+                name="subject"
+                placeholder="Subject Name"
+                required
+                value={subjectName}
+                onChange={(e) => setSubjectName(e.target.value)}
+                className=" rounded-lg py-6"
+              />
+            </div>
+
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
                 Class Weightage (Credits)
@@ -94,7 +156,8 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                 type="number"
                 min="1"
                 max="5"
-                defaultValue="1"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
                 required
                 className=" rounded-lg py-6"
               />
@@ -107,6 +170,8 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                   name="start"
                   type="time"
                   required
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
                   className=" rounded-lg"
                 />
               </div>
@@ -116,16 +181,25 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
                   name="end"
                   type="time"
                   required
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
                   className=" rounded-lg"
                 />
               </div>
             </div>
 
-            <Input
-              name="room"
-              placeholder="Room Number"
-              className="border-input rounded-lg py-6"
-            />
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
+                Room Number
+              </label>
+              <Input
+                name="room"
+                placeholder="Room Number"
+                value={room}
+                onChange={(e) => setRoom(e.target.value)}
+                className="border-input rounded-lg py-6"
+              />
+            </div>
 
             <Button
               type="submit"

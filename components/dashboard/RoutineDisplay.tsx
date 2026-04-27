@@ -4,15 +4,18 @@ import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Coffee, History, RotateCcw, Zap, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { AddClassDialog } from "@/components/dashboard/AddClassDialog";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { deleteClass } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import { ClassCard } from "./ClassCard";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { AddSubstituteDialog } from "./AddSubstitueDialog";
 import { cn } from "@/lib/utils";
+
+const AddClassDialog = dynamic(() => import("@/components/dashboard/AddClassDialog").then(mod => mod.AddClassDialog), { ssr: false });
+const AddSubstituteDialog = dynamic(() => import("./AddSubstitueDialog").then(mod => mod.AddSubstituteDialog), { ssr: false });
+const NewRoutineDialog = dynamic(() => import("./NewRoutineDialog").then(mod => mod.NewRoutineDialog), { ssr: false });
+const Calendar = dynamic(() => import("@/components/ui/calendar").then(mod => mod.Calendar), { ssr: false });
 
 import {
   Drawer,
@@ -38,7 +41,7 @@ const DAYS = [
 ];
 
 import ClientOnly from "./ClientOnly";
-import { NewRoutineDialog } from "./NewRoutineDialog";
+
 
 export function RoutineDisplay({
   initialRoutine,

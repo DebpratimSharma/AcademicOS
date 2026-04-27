@@ -38,7 +38,7 @@ const InstallModals = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-foreground leading-tight">
-                    Install Academic OS
+                    Install Schedura
                   </h3>
                   <p className="text-xs text-zinc-400 mt-1">
                     Add to your home screen for full access

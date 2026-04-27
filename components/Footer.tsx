@@ -7,7 +7,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="text-sm text-muted-foreground">
           © 2025{" "}
-          <span className="font-bold italic text-foreground">AcademicOS</span>
+          <span className="font-bold italic text-foreground">Schedura</span>
           <Link
             href="https://github.com/DebpratimSharma"
             className=" hover:text-primary transition-colors"
@@ -33,7 +33,7 @@ export function Footer() {
             Contact
           </Link>
           <Link
-            href="https://github.com/DebpratimSharma/AcademicOS"
+            href="https://github.com/DebpratimSharma/Schedura"
             className="hover:text-primary transition-colors"
           >
             <div className="flex gap-1">

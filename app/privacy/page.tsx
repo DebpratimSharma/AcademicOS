@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
       
       <section className="mt-8 space-y-4">
         <h2 className="text-xl font-semibold">1. Information We Collect</h2>
-        <p>AcademicOS only accesses your Google profile information (email and name) via Supabase Auth to create your account and save your personal schedule.</p>
+        <p>Schedura only accesses your Google profile information (email and name) via Supabase Auth to create your account and save your personal schedule.</p>
         
         <h2 className="text-xl font-semibold">2. How We Use Data</h2>
         <p>Your data is used strictly for display within the app. We do not sell, trade, or share your information with third parties.</p>

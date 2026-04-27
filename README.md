@@ -1,8 +1,8 @@
-# <img src="public/favicon.ico" width="32" height="32" valign="middle"> AcademicOS
+# <img src="public/favicon.ico" width="32" height="32" valign="middle"> Schedura
 
 **The Intelligent Academic Routine Manager**
 
-AcademicOS is a high-performance, mobile-first academic routine manager designed for students and educators. It goes beyond a simple calendar by synchronizing your daily schedule with real-time attendance tracking, intelligent holiday logic, and seamless substitute session management.
+Schedura is a high-performance, mobile-first academic routine manager designed for students and educators. It goes beyond a simple calendar by synchronizing your daily schedule with real-time attendance tracking, intelligent holiday logic, and seamless substitute session management.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -25,7 +25,7 @@ AcademicOS is a high-performance, mobile-first academic routine manager designed
 
 ### 📊 Advanced Attendance Tracking
 - **Real-time Stats**: Instant calculation of your attendance percentage, classes conducted, and classes attended.
-- **Manual Baseline Override**: NEW! Switch to AcademicOS easily by providing your previous attendance percentage/count as a starting point.
+- **Manual Baseline Override**: NEW! Switch to Schedura easily by providing your previous attendance percentage/count as a starting point.
 - **Correction Mode**: Correct master records or past logs without breaking your historical data.
 
 ### 🌓 Premium User Experience
@@ -37,13 +37,13 @@ AcademicOS is a high-performance, mobile-first academic routine manager designed
 
 ## 🛠️ Tech Stack
 
-AcademicOS is built with a modern, scalable stack:
+Schedura is built with a modern, scalable stack:
 
 | Category | Technology |
 | :--- | :--- |
 | **Frontend** | [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/) |
 | **Language** | [TypeScript](https://www.typescriptlang.org/) |
-| **Styling** | [Tailwind CSS 4.0](https://tailwindcss.com/), [Lucide React](https://lucide.dev/) |
+| **Styling** | [Tailwind CSS 4.0](https://tailwindcss.com/), [Lucide React](https://lucide.dev/), [TanStack Query](https://tanstack.com/query) |
 | **Database & Auth** | [Supabase](https://supabase.com/) |
 | **State & Fetching** | Server Actions, [Next-Themes](https://github.com/pacocoursey/next-themes) |
 | **UI Components** | [Radix UI](https://www.radix-ui.com/), [Vaul](https://github.com/emilkowalski/vaul) (Drawers), [Sonner](https://sonner.emilkowal.ski/) |
@@ -60,8 +60,8 @@ AcademicOS is built with a modern, scalable stack:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/academicos.git
-   cd academicos
+   git clone https://github.com/yourusername/schedura.git
+   cd schedura
    ```
 
 2. **Install dependencies**

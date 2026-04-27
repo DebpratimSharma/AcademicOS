@@ -5,9 +5,10 @@ import { ChevronDown, Divide } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { UserNav } from "./UserNav";
-import { HolidayDrawer } from "./HolidayDrawer";
-import { WorkingDaysDialog } from "./WorkingDaysDialog";
-import { ManualOverrideDialog } from "./ManualOverrideDialog";
+import dynamic from "next/dynamic";
+const HolidayDrawer = dynamic(() => import("./HolidayDrawer").then(mod => mod.HolidayDrawer), { ssr: false });
+const WorkingDaysDialog = dynamic(() => import("./WorkingDaysDialog").then(mod => mod.WorkingDaysDialog), { ssr: false });
+const ManualOverrideDialog = dynamic(() => import("./ManualOverrideDialog").then(mod => mod.ManualOverrideDialog), { ssr: false });
 import { Button } from "../ui/button";
 
 // Placeholder for user name, replace with actual user data when available
@@ -51,7 +52,7 @@ const Header = () => {
             height={40}
             className="h-auto w-auto"
           />
-          <span className="italic text-foreground/70 text-lg md:text-xl">Academic OS</span>
+          <span className="italic text-foreground/70 text-lg md:text-xl">Schedura</span>
         </div>
         <UserNav />
       </div>

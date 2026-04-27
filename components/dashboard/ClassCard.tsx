@@ -12,7 +12,8 @@ import {
 import { toast } from "sonner";
 import { updateAttendance, updateWeight } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
-import { EditClassDialog } from "@/components/dashboard/EditClassDialog";
+import dynamic from "next/dynamic";
+const EditClassDialog = dynamic(() => import("@/components/dashboard/EditClassDialog").then(mod => mod.EditClassDialog), { ssr: false });
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
