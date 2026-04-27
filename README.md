@@ -1,109 +1,104 @@
-📅 AcademicOS: Smart Academic Scheduler
+# <img src="public/favicon.ico" width="32" height="32" valign="middle"> AcademicOS
 
-A high-performance, mobile-first academic routine manager built for students and educators. AcademicOS synchronizes your daily schedule with real-time attendance tracking, automated holiday logic, and substitute session management.
+**The Intelligent Academic Routine Manager**
 
-✨ Key Features
+AcademicOS is a high-performance, mobile-first academic routine manager designed for students and educators. It goes beyond a simple calendar by synchronizing your daily schedule with real-time attendance tracking, intelligent holiday logic, and seamless substitute session management.
 
-🕒 Intelligent Routine Management
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-green?style=for-the-badge&logo=supabase)](https://supabase.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 
-Dynamic Tabs: Automatic day-selection based on current time.
+---
 
-Precision Scheduling: Handles regular weekly classes and one-time substitute sessions seamlessly.
+## ✨ Key Features
 
-Timezone-Safe Logic: Proprietary date calculation that prevents "date-drift" across different geographic regions.
+### 🕒 Intelligent Routine Management
+- **Dynamic Context**: Automatic day-selection based on your local current time.
+- **Precision Scheduling**: Handles regular weekly classes and one-time substitute sessions seamlessly.
+- **Timezone-Safe Logic**: Built-in calculation logic that prevents "date-drift" across different geographic regions.
 
-🏖️ Smart Holiday System
+### 🏖️ Smart Holiday System
+- **Personalized Breaks**: Mark specific days as holidays to instantly adjust your schedule.
+- **Global Reactive State**: When a holiday is marked, attendance tracking for that day is automatically locked to prevent accidental logs.
+- **Visual Indicators**: Clear indicators on tab headers for upcoming holidays.
 
-Per-User Holidays: Personalize your break days with a sleek Calendar Drawer.
+### 📊 Advanced Attendance Tracking
+- **Real-time Stats**: Instant calculation of your attendance percentage, classes conducted, and classes attended.
+- **Manual Baseline Override**: NEW! Switch to AcademicOS easily by providing your previous attendance percentage/count as a starting point.
+- **Correction Mode**: Correct master records or past logs without breaking your historical data.
 
-Global Reactive State: Mark a day as a holiday, and all attendance buttons instantly lock across the app to prevent accidental tracking.
+### 🌓 Premium User Experience
+- **Dark Mode Support**: Seamless integration with `next-themes` for comfortable late-night scheduling.
+- **Glassmorphism Design**: A sleek, modern interface built with Tailwind CSS 4.0 and Radix UI.
+- **Mobile First**: Fully responsive design with touch-friendly drawers and dialogs.
 
-Visual Indicators: Indicators on tab headers for upcoming holidays.
+---
 
-📊 Attendance Tracking (BETA)
+## 🛠️ Tech Stack
 
-One-Tap Logs: Mark presence, absence, or dismissed status with haptic-ready feedback.
+AcademicOS is built with a modern, scalable stack:
 
-Persistence: Powered by Supabase RLS (Row Level Security) for iron-clad data privacy.
+| Category | Technology |
+| :--- | :--- |
+| **Frontend** | [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) |
+| **Styling** | [Tailwind CSS 4.0](https://tailwindcss.com/), [Lucide React](https://lucide.dev/) |
+| **Database & Auth** | [Supabase](https://supabase.com/) |
+| **State & Fetching** | Server Actions, [Next-Themes](https://github.com/pacocoursey/next-themes) |
+| **UI Components** | [Radix UI](https://www.radix-ui.com/), [Vaul](https://github.com/emilkowalski/vaul) (Drawers), [Sonner](https://sonner.emilkowal.ski/) |
 
-📱 Modern UI/UX
+---
 
-Design: Minimalist aesthetics with a focus on typography (Bold & Italic accents).
+## 🚀 Getting Started
 
-Speed Dial Menu: Quick-action floating buttons for adding classes or substitutes on the fly.
+### Prerequisites
+- Node.js 20+ 
+- pnpm (recommended)
 
-Adaptive Dark Mode: Sophisticated palette that adjusts to your system theme.
+### Installation
 
-🛠️ Tech Stack
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/academicos.git
+   cd academicos
+   ```
 
-Framework: Next.js 14+ (App Router)
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-Database & Auth: Supabase
+3. **Environment Setup**
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+   ```
 
-Styling: Tailwind CSS
+4. **Run the development server**
+   ```bash
+   pnpm dev
+   ```
 
-Components: Shadcn/UI
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-State Management: React Hooks & Custom Event Dispatching
+---
 
-Date Handling: date-fns
+## 🛡️ Core Architecture
 
-🚀 Getting Started
+- **Server Actions**: All database mutations (adding classes, marking attendance, resetting accounts) are handled via secure Next.js Server Actions.
+- **RLS (Row Level Security)**: All user data is protected at the database level via Supabase RLS, ensuring your schedule is private to you.
+- **Hydration Safety**: Advanced handling of client-side state (like themes and dates) to prevent SSR mismatches.
 
-Prerequisites
+---
 
-Node.js 18+
+## 📄 License
 
-Supabase Account
+Distributed under the MIT License. See `LICENSE` for more information.
 
-Installation
+---
 
-Clone the repository
-
-git clone [https://github.com/DebpratimSharma/AcademicOS.git](https://github.com/DebpratimSharma/AcademicOS.git)
-cd academicos
-
-
-Install dependencies
-
-pnpm install
-
-
-Environment Setup
-Create a .env.local file and add your Supabase credentials.
-
-Database Schema
-Run the SQL migrations provided in /supabase/migrations to set up:
-
-routines table
-
-holidays table
-
-extra_sessions table
-
-attendance table
-
-attendance_stats  view
-
-user_settings table
-
-Launch
-
-pnpm run dev
-
-
-🔒 Security & Cookies
-
-AcademicOS utilizes Strictly Necessary Cookies for authentication and session persistence via Supabase. We prioritize user privacy:
-
-No third-party tracking or marketing cookies.
-
-Row-Level Security ensures you only ever see your own data.
-
-🗺️ Working On
-
-[ ] Analytics Hub (Attendance Percentage)
-
-[ ] Push Notifications for upcoming classes
-
-Built with ❤️ for better academic productivity.
+<p align="center">
+  Built with ❤️ for students everywhere.
+</p>
