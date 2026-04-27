@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Loader2, RefreshCcw, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { archiveRoutine } from "@/app/dashboard/actions";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +21,6 @@ export function NewRoutineDialog({ activeDay }: { activeDay: string }) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   // Helper to get formatted date strings safely
   const getLocalDateStrings = () => {
@@ -46,26 +45,16 @@ export function NewRoutineDialog({ activeDay }: { activeDay: string }) {
     setLoading(true);
     const { yesterday } = getLocalDateStrings();
 
-    // 1. Update all active classes for this specific day
-    const { error } = await supabase
-      .from("routines")
-      .update({ 
-        status: "archived", 
-        end_date: yesterday 
-      })
-      .eq("day_of_week", activeDay)
-      .eq("status", "active")
-      .is("end_date", null);
-
-    if (!error) {
+    try {
+      await archiveRoutine(activeDay, yesterday);
       toast.success(`Archived previous ${activeDay} routine`);
       setOpen(false);
-      router.refresh();
-    } else {
+    } catch (error) {
       console.error(error);
       toast.error("Failed to update routine");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

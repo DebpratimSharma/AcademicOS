@@ -10,6 +10,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { updateAttendance, updateWeight } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import { EditClassDialog } from "@/components/dashboard/EditClassDialog";
 import { cn } from "@/lib/utils";
@@ -88,73 +89,35 @@ export function ClassCard({
     setActualWeight(newWeight);
     setLoading(true);
 
-    if (isExtra) {
-      await supabase
-        .from("extra_sessions")
-        .update({ actual_weight: newWeight })
-        .eq("id", item.id);
-    } else {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      await supabase.from("attendance").upsert(
-        {
-          user_id: user?.id,
-          routine_id: item.id,
-          status: "present",
-          date: dateStr,
-          actual_weight: newWeight,
-        },
-        { onConflict: "routine_id, date" }
-      );
+    try {
+      await updateWeight(item.id, newWeight, dateStr, isExtra);
+      toast.success("Weight updated");
+      window.dispatchEvent(new Event("attendanceUpdated"));
+    } catch (error) {
+      toast.error("Failed to update weight");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Weight updated");
-    window.dispatchEvent(new Event("attendanceUpdated"));
-    setLoading(false);
   };
 
   const handleAttendance = async (
     status: "present" | "absent" | "dismissed"
   ) => {
     setLoading(true);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     const weightToSubmit = status === "present" ? actualWeight : 0;
 
-    let error;
-    if (isExtra) {
-      const { error: err } = await supabase
-        .from("extra_sessions")
-        .update({
-          status,
-          actual_weight: weightToSubmit,
-        })
-        .eq("id", item.id);
-      error = err;
-    } else {
-      const { error: err } = await supabase.from("attendance").upsert(
-        {
-          user_id: user?.id,
-          routine_id: item.id,
-          status,
-          date: dateStr,
-          actual_weight: weightToSubmit,
-        },
-        { onConflict: "routine_id, date" }
-      );
-      error = err;
-    }
-
-    if (!error) {
+    try {
+      await updateAttendance(item.id, status, dateStr, weightToSubmit, isExtra);
       setAttendance(status);
       toast.success(`Marked as ${status}`);
       window.dispatchEvent(new Event("attendanceUpdated"));
-    } else {
+    } catch (error) {
       toast.error("Failed to save attendance");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

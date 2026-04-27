@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { addRegularClass } from "@/app/dashboard/actions";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,6 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   // Helper to get local date string YYYY-MM-DD without ISO/Hydration issues
   const getLocalDateString = () => {
@@ -37,36 +36,18 @@ export function AddClassDialog({ activeDay }: { activeDay: string }) {
     e.preventDefault();
     setLoading(true);
     
-    const formData = new FormData(e.currentTarget);
-    const { data: { user } } = await supabase.auth.getUser();
-
-    const weightValue = parseInt(formData.get("weight") as string) || 1;
-    const today = getLocalDateString();
-
-    const { error } = await supabase.from("routines").insert({
-      user_id: user?.id,
-      subject_name: formData.get("subject"),
-      day_of_week: activeDay,
-      start_time: formData.get("start"),
-      end_time: formData.get("end"),
-      room_number: formData.get("room"),
-      weight: weightValue,
-      // --- New Temporal Fields ---
-      status: 'active',
-      start_date: today, // Initializes the routine from today onwards
-      end_date: null,    // Remains active indefinitely
-      subject_code: formData.get("subject_code")
-    });
-
-    if (!error) {
+    try {
+      const formData = new FormData(e.currentTarget);
+      const today = getLocalDateString();
+      await addRegularClass(formData, activeDay, today);
       toast.success(`Added to ${activeDay}`);
       setOpen(false);
-      router.refresh();
-    } else {
+    } catch (error) {
       console.error(error);
       toast.error("Failed to add class");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

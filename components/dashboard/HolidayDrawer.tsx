@@ -18,6 +18,7 @@ import {
   Loader2,
   CircleChevronRight,
 } from "lucide-react";
+import { addHoliday, deleteHoliday } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -66,76 +67,36 @@ export function HolidayDrawer({
 
   const handleSave = async () => {
     if (!selectedDateStr) return;
-
     setLoading(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const { error } = await supabase
-
-      .from("holidays")
-
-      .insert([
-        {
-          holiday_date: selectedDateStr,
-
-          user_id: user?.id, // Explicitly set user_id
-        },
-      ]);
-
-    if (!error) {
+    try {
+      await addHoliday(selectedDateStr);
       setHolidays((prev) => [...prev, selectedDateStr]);
-
       toast.success("Holiday added");
-
-      // Notify other components to disable buttons
-
       window.dispatchEvent(new Event("attendanceUpdated"));
-
-      router.refresh();
-    } else {
+    } catch (error) {
       toast.error("Failed to save holiday");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleDelete = async () => {
     if (!selectedDateStr) return;
-
     setLoading(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const { error } = await supabase
-
-      .from("holidays")
-
-      .delete()
-
-      .eq("holiday_date", selectedDateStr)
-
-      .eq("user_id", user?.id); // Safety check
-
-    if (!error) {
+    try {
+      await deleteHoliday(selectedDateStr);
       setHolidays((prev) => prev.filter((h) => h !== selectedDateStr));
-
       toast.error("Holiday removed");
-
-      // Notify other components to re-enable buttons
-
       window.dispatchEvent(new Event("attendanceUpdated"));
-
-      router.refresh();
-    } else {
+    } catch (error) {
       toast.error("Failed to remove holiday");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

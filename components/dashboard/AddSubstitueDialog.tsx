@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Plus, Loader2, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { addSubstituteClass } from "@/app/dashboard/actions";
 import { toast } from "sonner";
 import {
   Drawer,
@@ -23,42 +23,24 @@ export function AddSubstituteDialog({ dateStr }: { dateStr: string;}) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
-  const supabase = createClient();
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    const form = e.currentTarget; // Reference the form
+    const form = e.currentTarget;
     const formData = new FormData(form);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
-    const weightValue = parseInt(formData.get("weight") as string) || 1;
-
-    const { error } = await supabase.from("extra_sessions").insert({
-      user_id: user?.id,
-      subject_name: formData.get("subject"),
-      date: dateStr,
-      start_time: formData.get("start"),
-      end_time: formData.get("end"),
-      weight: weightValue, // Scheduled weight (Denominator)
-      actual_weight: weightValue, // Default received weight (Numerator)
-    });
-
-    if (!error) {
+    try {
+      await addSubstituteClass(formData, dateStr);
       toast.success(`Substituted class added for ${dateStr}`);
       setOpen(false);
-      form.reset(); // Clear the form for next time
-
-      // ENSURE THIS MATCHES YOUR OTHER FILES
+      form.reset();
       window.dispatchEvent(new Event("attendanceUpdated"));
-      router.refresh();
-    } else {
+    } catch (error) {
       toast.error("Error adding substitute");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

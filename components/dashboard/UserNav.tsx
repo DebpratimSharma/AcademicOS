@@ -24,9 +24,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
+import { resetAccount } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import { WorkingDaysDialog } from "./WorkingDaysDialog";
 import { HolidayDrawer } from "./HolidayDrawer";
+import { ManualOverrideDialog } from "./ManualOverrideDialog";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -48,10 +50,11 @@ export function UserNav() {
   const router = useRouter();
   const supabase = createClient();
   const [userID, setUserID] = useState<String | null>(null);
-
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-      const fetchUserID = async () => {
+    setMounted(true);
+    const fetchUserID = async () => {
         const {
           data: { user },
         } = await supabase.auth.getUser();
@@ -78,60 +81,10 @@ export function UserNav() {
   const handleFreshStart = async () => {
     setIsResetting(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("No user found");
-
-      // 1. Delete Extra Sessions (Substitute classes)
-      const { error: extraError } = await supabase
-        .from('extra_sessions')
-        .delete()
-        .eq('user_id', user.id);
-
-      if (extraError) throw extraError;
-
-      // 2. Delete Attendance History explicitly 
-      // (Ensures stats are cleared even if cascade isn't perfect)
-      const { error: attendanceError } = await supabase
-        .from('attendance')
-        .delete()
-        .eq('user_id', user.id);
-
-      if (attendanceError) throw attendanceError;
-
-      // 3. Delete all Routines 
-      const { error: routineError } = await supabase
-        .from('routines')
-        .delete()
-        .eq('user_id', user.id);
-
-      if (routineError) throw routineError;
-
-      // 4. Delete all Custom Holidays
-      const { error: holidayError } = await supabase
-        .from('holidays')
-        .delete()
-        .eq('user_id', user.id);
-      
-      if (holidayError) throw holidayError;
-
-      // 5. Reset User Settings to Defaults
-      // We update the existing row back to the original default array
-      const { error: settingsError } = await supabase
-        .from('user_settings')
-        .update({ 
-          working_days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] 
-        })
-        .eq('user_id', user.id);
-
-      if (settingsError) throw settingsError;
-
+      await resetAccount();
       toast.success("Account reset to default settings");
       setShowResetAlert(false);
       window.dispatchEvent(new Event("attendanceUpdated"));
-
-      // Refresh to update the UI and re-run server-side fetches for StatsCards
-      router.refresh(); 
-      
     } catch (error) {
       console.error("Reset Error:", error);
       toast.error("Failed to clear all data");
@@ -164,18 +117,20 @@ export function UserNav() {
               </div>
               <div className="flex border-l pl-2 items-center justify-between gap-2 py-1.5">
                 <div className="flex items-center gap-2">
-                  {theme === "dark" ? (
+                  {!mounted ? (
+                    <Sun className="h-4 w-4" />
+                  ) : theme === "dark" ? (
                     <Moon className="h-4 w-4" />
                   ) : (
                     <Sun className="h-4 w-4" />
                   )}
                 </div>
                 <Switch
-                  checked={theme === "dark"}
+                  checked={mounted && theme === "dark"}
                   onCheckedChange={(checked) =>
                     setTheme(checked ? "dark" : "light")
-
                   }
+                  disabled={!mounted}
                 />
               </div>
             </DropdownMenuLabel>
@@ -184,6 +139,10 @@ export function UserNav() {
             <DropdownMenuGroup className="md:hidden">
               <WorkingDaysDialog />
               <HolidayDrawer />
+            </DropdownMenuGroup>
+
+            <DropdownMenuGroup>
+              <ManualOverrideDialog />
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator className="md:hidden" />

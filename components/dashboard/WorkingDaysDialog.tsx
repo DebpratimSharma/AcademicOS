@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { updateWorkingDays } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";   
 import { useRouter } from "next/navigation";
@@ -73,32 +74,23 @@ export function WorkingDaysDialog({customTrigger}:{customTrigger?: React.ReactNo
     );
   };
 
-  // 2. Save/Sync with Cloud
   const handleSave = async () => {
     setLoading(true);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
-    if (!user) return;
+    try {
+      const sortedToSave = [...selectedDays].sort(
+        (a, b) => MASTER_WEEK.indexOf(a) - MASTER_WEEK.indexOf(b)
+      );
 
-    const sortedToSave = [...selectedDays].sort(
-      (a, b) => MASTER_WEEK.indexOf(a) - MASTER_WEEK.indexOf(b)
-    );
-
-    const { error } = await supabase.from("user_settings").upsert({
-      user_id: user.id,
-      working_days: sortedToSave,
-    });
-
-    if (error) {
-      toast.error("Failed to sync settings");
-    } else {
+      await updateWorkingDays(sortedToSave);
       toast.success("Working days updated!");
       setOpen(false);
-      router.refresh();
+    } catch (error) {
+      toast.error("Failed to sync settings");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

@@ -7,6 +7,7 @@ import { createClient } from "@/utils/supabase/client";
 import { UserNav } from "./UserNav";
 import { HolidayDrawer } from "./HolidayDrawer";
 import { WorkingDaysDialog } from "./WorkingDaysDialog";
+import { ManualOverrideDialog } from "./ManualOverrideDialog";
 import { Button } from "../ui/button";
 
 // Placeholder for user name, replace with actual user data when available
@@ -60,6 +61,14 @@ const Header = () => {
           <p className="font-thin">{currentDate}</p>
         </div>
         <div className="hidden md:flex items-baseline gap-5">
+          <ManualOverrideDialog 
+            customTrigger={
+              <Button variant="secondary" className="text-foreground/70 bg-card px-3 py-2.5 rounded-lg border border-border cursor-pointer">
+                Set baseline
+              </Button>
+            }
+          />
+          
           <HolidayDrawer
             customTrigger={
               <Button variant="secondary" className=" text-foreground/70 bg-card px-3 py-2.5 rounded-lg border border-border  cursor-pointer">

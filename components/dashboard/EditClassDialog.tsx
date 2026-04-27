@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Pencil, Loader2, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { updateClass } from "@/app/dashboard/actions";
 import { toast } from "sonner";
 import {
   Drawer,
@@ -34,53 +34,25 @@ export function EditClassDialog({ item }: { item: any }) {
   const formRef = React.useRef<HTMLFormElement>(null);
   
   const router = useRouter();
-  const supabase = createClient();
   const isSubstitute = item.hasOwnProperty("date");
 
-  // This handles the actual database call
   async function executeUpdate() {
     if (!formRef.current) return;
     setLoading(true);
     const formData = new FormData(formRef.current);
 
-    let error;
-    if (isSubstitute) {
-      const result = await supabase
-        .from("extra_sessions")
-        .update({
-          subject_name: formData.get("subject"),
-          start_time: formData.get("start"),
-          end_time: formData.get("end"),
-          weight: parseInt(formData.get("weight") as string),
-          actual_weight: parseInt(formData.get("weight") as string),
-        })
-        .eq("id", item.id);
-      error = result.error;
-    } else {
-      const result = await supabase
-        .from("routines")
-        .update({
-          subject_name: formData.get("subject"),
-          start_time: formData.get("start"),
-          end_time: formData.get("end"),
-          room_number: formData.get("room"),
-          weight: parseInt(formData.get("weight") as string),
-          subject_code: formData.get("subject_code"),
-        })
-        .eq("id", item.id);
-      error = result.error;
-    }
-
-    if (!error) {
+    try {
+      await updateClass(formData, item.id, isSubstitute);
       toast.success(isSubstitute ? "Correction applied" : "Master record updated");
       setOpen(false);
       setShowConfirm(false);
-      router.refresh();
       window.dispatchEvent(new Event("attendanceUpdated"));
-    } else {
+    } catch (error) {
       toast.error("Update failed");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   const handleSubmitAttempt = (e: React.FormEvent) => {

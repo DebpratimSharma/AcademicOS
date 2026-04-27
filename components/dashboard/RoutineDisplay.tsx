@@ -6,6 +6,7 @@ import { Coffee, History, RotateCcw, Zap, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AddClassDialog } from "@/components/dashboard/AddClassDialog";
 import { useRouter } from "next/navigation";
+import { deleteClass } from "@/app/dashboard/actions";
 import { createClient } from "@/utils/supabase/client";
 import { ClassCard } from "./ClassCard";
 import { Button } from "@/components/ui/button";
@@ -122,13 +123,14 @@ export function RoutineDisplay({
   }, [overrideDate, sortedDays]);
 
   const handleDelete = async (id: string, isExtra: boolean = false) => {
-    const table = isExtra ? "extra_sessions" : "routines";
-    const { error } = await supabase.from(table).delete().eq("id", id);
-
-    if (!error) {
+    try {
+      await deleteClass(id, isExtra);
       toast.error(isExtra ? "Substitute removed" : "Class deleted");
       window.dispatchEvent(new Event("attendanceUpdated"));
-      isExtra ? fetchExtras() : router.refresh();
+      if (isExtra) fetchExtras();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete class");
     }
   };
 
