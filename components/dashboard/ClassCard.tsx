@@ -106,11 +106,12 @@ export function ClassCard({
     status: "present" | "absent" | "dismissed"
   ) => {
     setLoading(true);
-    const weightToSubmit = status === "present" ? actualWeight : 0;
+    const weightToSubmit = status === "present" ? (actualWeight || item.weight) : 0;
 
     try {
       await updateAttendance(item.id, status, dateStr, weightToSubmit, isExtra);
       setAttendance(status);
+      setActualWeight(weightToSubmit);
       toast.success(`Marked as ${status}`);
       window.dispatchEvent(new Event("attendanceUpdated"));
     } catch (error) {
